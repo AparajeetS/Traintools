@@ -135,7 +135,7 @@ def _classify(gns: float, B: int) -> tuple[str, str]:
     else:
         regime = "optimal"
         rec = (f"Batch size {B} is near the critical batch size (~{critical}). "
-               f"Gradient signal is well-conditioned — no change needed.")
+               f"Gradient signal is well-conditioned - no change needed.")
     return regime, rec
 
 

@@ -120,7 +120,7 @@ class TraintoolsCallback(TrainerCallback):
             if self.verbose:
                 print(f"\n[traintools] {result}")
             if self._plasticity_history.is_degrading():
-                print("[traintools] ! Plasticity degrading — consider reinitialising "
+                print("[traintools] ! Plasticity degrading - consider reinitialising "
                       "dormant units or lowering LR.")
 
         if (model is not None and step > 0 and step % self.gns_freq == 0

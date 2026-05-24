@@ -1,215 +1,169 @@
-# Three questions every training run should answer (and a tool that answers them)
+# Gradient Noise Scale for free, during gradient accumulation
 
-Most ML training loops are flying blind on three things that cost real money:
+If you train with gradient accumulation, you're already computing everything you
+need to know whether your batch size is right — and throwing it away.
 
-1. **Is my batch size wasting compute?**
-2. **Is my network losing the ability to learn?**
-3. **Should I have stopped 10 epochs ago?**
+The **Gradient Noise Scale** (GNS, McCandlish et al. 2018) tells you the critical
+batch size: the point past which bigger batches stop helping. Every existing
+implementation estimates it with *extra* forward/backward passes. But the
+per-micro-batch gradients you compute during accumulation are exactly the samples
+GNS needs. So you can get it for free:
 
-The theory to answer all three has existed for years. Nobody shipped a clean,
-zero-config tool that actually plugs into a training loop. So I did.
+```python
+from traintools import GradientAccumulationGNS
+
+gns = GradientAccumulationGNS(model, micro_batch_size=B_micro)
+
+for step in range(num_steps):
+    for micro in micro_batches:
+        (loss_fn(model(xm), ym) / accum_steps).backward()
+        gns.record_microbatch()          # <- the only added line
+    optimizer.step()
+    result = gns.compute(step=step)      # GNS, zero extra passes
+    optimizer.zero_grad()
+    gns.reset_accumulation()
+```
 
 ```
 pip install traintools[full]
 ```
 
----
-
-## The three tools
-
-### 1. Gradient Noise Scale — is your batch size right?
-
-McCandlish et al. (2018) showed that every training run has a *critical batch size*
-B* where you're at the efficient frontier of compute vs. wall-clock time:
-
-```
-GNS = B * Var[g] / ||E[g]||²
-```
-
-When `GNS >> B`: gradient signal dominates — larger batches would help.  
-When `GNS << B`: noise dominates — you're paying for samples that add nothing.  
-When `GNS ≈ B`: optimal.
-
-The paper is well-known. The tool didn't exist. `traintools` estimates GNS every
-N steps by splitting your batch in half, comparing the two gradient vectors, and
-giving you a concrete recommendation:
-
-```
-[step 100] GNS=36.1  critical_batch=36  current=64  regime=optimal
-  > Batch size 64 is near the critical batch size (36). No change needed.
-```
-
-Or, if you're wasting compute:
-
-```
-[step 100] GNS=8.2  critical_batch=8  current=128  regime=noise-dominated
-  > Batch size 128 is ~16x too large. Critical batch ~8.
-    Reducing batch size would maintain throughput with less compute.
-```
-
-Per-layer GNS is also available — sometimes one layer is the noise bottleneck
-while the rest are fine.
+This is part of `traintools` — three training diagnostics with a 2-line API.
+I'll be honest up front about what's novel and what isn't.
 
 ---
 
-### 2. PlasticityProbe — is your network becoming brittle?
-
-Lyle et al. (2023) documented *loss of plasticity* in neural networks: models
-trained for long periods, or repeatedly fine-tuned, gradually lose their ability
-to adapt. The symptoms are measurable:
-
-- **Dead neurons** — ReLU units that output zero on every input in the batch
-- **Collapsed weight spectra** — weight matrices becoming nearly rank-1
-- **Frozen gradients** — gradient magnitude falling far below weight magnitude
-
-`traintools` hooks into your model's forward and backward passes and computes a
-**Plasticity Score ∈ [0, 1]** (1 = fully plastic, 0 = dead) using the geometric
-mean of these three signals per layer:
+## 1. Gradient Noise Scale — is your batch size right?
 
 ```
-[step 200] Plasticity Score: 0.968
-  All layers healthy.
+GNS = tr(Σ) / ||G||²
 ```
 
-When it degrades:
+tr(Σ) is the total variance of the per-example gradients; ‖G‖² is the squared
+true gradient. Their ratio is the critical batch size B*.
+
+- `GNS > B` → **under-batched**: the gradient is too noisy for this batch; bigger batches improve every step.
+- `GNS < B` → **over-batched**: you're averaging more than you need to; shrink the batch and save compute.
+- `GNS ≈ B` → **optimal**.
+
+**The estimator matters.** The naive single-shot estimate is biased low — by
+about 2× at the common 2-split setting — and far too noisy to act on. `traintools`
+uses the paper's unbiased estimators (Bessel-corrected variance, bias-corrected
+signal) and tracks GNS as the ratio of two separate exponential moving averages.
+On a synthetic problem with a known true GNS of 4.0, the corrected estimator
+recovers 3.99; the naive version returns 1.78.
+
+---
+
+## 2. PlasticityProbe — is your network becoming brittle?
+
+Networks lose the ability to learn over long runs and repeated fine-tuning
+(Dohare & Sutton, *Nature* 2024). The damage is in the *representations*, so
+`traintools` measures activations directly:
+
+- **Dormant unit fraction** — units that output ~0 for every input, attributed
+  to the activation module that produced them.
+- **Feature effective rank** — the effective rank of the activation covariance,
+  normalised to [0,1]. Low rank means the representation has collapsed.
+
+Combined into a **Plasticity Score ∈ [0,1]**:
 
 ```
 [step 4000] Plasticity Score: 0.21
-  Critical layers: transformer.h.11.mlp.fc1, transformer.h.10.mlp.fc1
-  Action: consider layer re-initialization or reduced LR warm-up.
-  transformer.h.11.mlp.fc1: score=0.18  dead=61%  erank=0.31  gw_ratio=3.2e-08  [DEAD>61% | rank-collapsed | gradient-frozen]
+  Critical layers: blocks.11.mlp.act, blocks.10.mlp.act
+  Action: reinitialise dormant units (continual backprop) or add regenerative regularisation.
 ```
-
-This matters most for continual learning and repeated fine-tuning — the exact
-regimes where practitioners are currently flying blind.
 
 ---
 
-### 3. TrainGuard — probabilistic early stopping
+## 3. TrainGuard — should you stop training yet?
 
-Standard early stopping (patience=N) is a blunt instrument. It doesn't tell you
-*how much* you'd gain by continuing, or *when* you'd hit the plateau.
-
-`traintools` fits a power-law curve to your validation loss history:
-
-```
-loss(t) = a + b * t^(-c)
-```
-
-bootstraps uncertainty over the fit with 200 Monte Carlo samples, and gives you
-a principled STOP signal with a confidence interval on the expected improvement:
+Fits a power-law (or exponential) curve to the validation-loss history,
+bootstraps uncertainty over the fit, and issues a STOP only when the 90%
+confidence interval on further improvement falls below your threshold:
 
 ```
 [step 193] STOP
   current loss: 0.6536
   predicted final: 0.6119
   expected improvement: 0.0417 (90% CI: [0.0012, 0.0821])
-  estimated plateau at step: 3200
   reason: No improvement in 300 steps (best=0.6350 at step 93).
 ```
 
-On a noisy-MNIST demo (2000 samples, 30% label noise, 20 epochs budgeted),
-TrainGuard stopped training at **epoch 7** instead of running all 20 — saving
-65% of training compute with no loss in final accuracy.
+It also refuses to fire when the fit is unstable (predicted improvement < 0),
+so a noisy curve doesn't get a false stop signal.
 
 ---
 
-## Demo: noisy MNIST
+## Demo: the corrected GNS finds something the buggy version hid
 
-To make the diagnostics visible, I trained a 2-layer MLP on 2000 MNIST samples
-with 30% random label noise — a setup where memorization pressure is real and
-early stopping matters.
+I trained a small MLP on 2000 MNIST samples with 30% label noise — a setup with
+genuinely high gradient noise.
 
-![traintools demo plot](traintools_demo.png)
+![traintools demo](traintools_demo.png)
 
-**Left — GNS:** The critical batch size is ~34. Running with batch=64 puts you
-inside the optimal band [16, 256] — no change needed. The GNS is stable across
-training, meaning the gradient geometry isn't changing much (expected for a
-small, simple model).
+**GNS (left):** the corrected estimator reports the run is *severely
+under-batched* — the critical batch is in the thousands, while training ran at
+batch 64. Early on the signal is below the noise floor (GNS pinned at the display
+cap); as training sharpens the gradient, GNS settles toward ~3000. That's a real,
+actionable finding: on noisy data, much larger batches would denoise each step.
 
-**Center — Plasticity:** Score stays at ~0.97 throughout. The network never
-loses plasticity on this task — also expected, since 20 epochs on 2000 samples
-isn't long enough to kill neurons.
+A buggy first version of this tool reported GNS ≈ 34 ("optimal") on the same run.
+It was wrong by two orders of magnitude. The fix — Bessel correction plus a
+bias-corrected signal — is the difference between a useless number and a useful
+one.
 
-**Right — TrainGuard:** The val loss bounces (label noise) but the power-law
-fit correctly identifies the asymptote at ~0.61 and issues a STOP at epoch 7.
-The orange projection shows where the curve was heading.
+**Plasticity (center):** the feature-rank score rises from 0.61 to 0.71 as the
+representation develops, then stabilises — healthy. (20 epochs on 2000 samples
+isn't long enough to kill units, which is the correct read.)
+
+**TrainGuard (right):** the bouncing val loss is fit to a power law, the asymptote
+projected at ~0.70, and training stopped at epoch 19 instead of running the full
+budget.
 
 ---
 
-## Integration: two lines
+## What's novel, honestly
 
-**Raw PyTorch:**
+Each metric has a paper behind it — none of the three are new science:
 
-```python
-from traintools.callbacks.pytorch import TraintoolsTracker
+| Tool | Prior art |
+|---|---|
+| GNS | McCandlish et al. 2018 |
+| PlasticityProbe | Dohare & Sutton 2024; Lyle et al. 2023 |
+| TrainGuard | learning-curve extrapolation (Domhan 2015) |
 
-tracker = TraintoolsTracker(model, loss_fn, gns_freq=100, plasticity_freq=100)
+The contribution is **packaging and ergonomics**: a correct, EMA-stabilised GNS
+estimator that drops into any loop, and — the one genuinely differentiated piece —
+computing it for *free* during gradient accumulation instead of paying for extra
+passes. If that saves you from running a sweep to find the right batch size, it
+paid for itself.
 
-for step, (x, y) in enumerate(dataloader):
-    loss = loss_fn(model(x), y)
-    loss.backward()
-    optimizer.step()
-    optimizer.zero_grad()
+---
 
-    decision = tracker.step(step=step, inputs=x, targets=y, val_loss=val_loss)
-    if decision and decision.should_stop:
-        break
+## Install & integrate
+
+```bash
+pip install traintools[full]   # scipy + matplotlib for fitting and plots
+pip install traintools[hf]     # HuggingFace Trainer callback
 ```
 
-**HuggingFace Trainer:**
-
 ```python
+# HuggingFace Trainer — one line
 from traintools.callbacks.huggingface import TraintoolsCallback
-
 trainer = Trainer(model=model, ..., callbacks=[TraintoolsCallback()])
 ```
 
-End of training prints a summary:
-
-```
-GNS history (12 measurements): mean=34.5  latest=34.2  trend=stable
-Latest [optimal]: Batch size 64 is near the critical batch size (34).
-Final plasticity score: 0.965
-```
-
----
-
-## What's novel
-
-Each individual metric has a paper behind it. What's new:
-
-- **GNS was never packaged as a zero-config tool.** The McCandlish paper gave
-  the formula; implementing it in a training loop requires batch-splitting,
-  gradient accumulation awareness, and per-layer aggregation. None of the
-  standard training libraries do this.
-
-- **Plasticity monitoring has no existing tooling.** The DeepMind and Google
-  papers on plasticity loss are from 2023. No library tracks it during training.
-
-- **TrainGuard uses curve fitting + uncertainty, not patience counting.**
-  Standard early stopping tells you "no improvement in N steps." TrainGuard
-  tells you "expected improvement is X ± Y — here's the confidence interval."
-  That's a different (and more useful) answer.
-
----
-
-## Install
-
-```bash
-pip install traintools[full]   # includes scipy + matplotlib for fitting and plots
-pip install traintools[hf]     # adds HuggingFace Trainer callback
-pip install traintools         # PyTorch only, no curve fitting or plots
-```
-
-Source: https://github.com/[your-repo]  
+Source: https://github.com/AparajeetS/Traintools
 PyPI: https://pypi.org/project/traintools/
 
-Feedback, bug reports, and pull requests welcome.
+Bug reports and PRs welcome — especially benchmarks of the free-accumulation GNS
+against the extra-pass estimate on real LLM fine-tuning runs.
 
 ---
 
-*References*  
-McCandlish et al. (2018). An Empirical Model of Large-Batch Training. arXiv:1812.06162  
-Lyle et al. (2023). Understanding Plasticity in Neural Networks. ICML 2023.  
-Kumar et al. (2023). Maintaining Plasticity via Regenerative Regularization. arXiv:2308.11958
+*References*
+McCandlish, Kaplan, Amodei et al. (2018). An Empirical Model of Large-Batch Training. arXiv:1812.06162
+Dohare, Sutton et al. (2024). Loss of plasticity in deep continual learning. Nature 632, 768–774.
+Lyle et al. (2023). Understanding plasticity in neural networks. ICML.
+Domhan et al. (2015). Speeding up automatic hyperparameter optimization of DNNs by extrapolation of learning curves. IJCAI.

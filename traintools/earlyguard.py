@@ -226,7 +226,7 @@ class TrainGuard:
             # Don't fire a false STOP; fall back to patience check only.
             should_stop = False
             reason = (f"Curve fit unstable (predicted improvement {improvement:.6f} < 0). "
-                      f"Defaulting to patience check — no stop signal.")
+                      f"Defaulting to patience check - no stop signal.")
         elif improvement <= self.min_improvement:
             should_stop = True
             reason = (f"Predicted improvement over next {self.horizon_steps} steps is "
@@ -343,7 +343,7 @@ class TrainGuard:
             # Try power first
             y_fut = _power_law_np(t_fut, *popt)
             ax.plot(t_fut, y_fut, linestyle="--", color="orange", label="projected")
-            ax.axhline(popt[0], linestyle=":", color="gray", linewidth=0.8, label=f"asymptote≈{popt[0]:.4f}")
+            ax.axhline(popt[0], linestyle=":", color="gray", linewidth=0.8, label=f"asymptote~{popt[0]:.4f}")
 
         ax.set_xlabel("Training step")
         ax.set_ylabel("Validation loss")
