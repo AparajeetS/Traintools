@@ -22,7 +22,7 @@ import torch
 import torch.nn as nn
 
 from traintools.gradnoise import GNSHistory, GNSResult, estimate_gns
-from traintools.plasticity import PlasticityHistory, PlasticityProbe, _effective_rank_normalized
+from traintools.plasticity import PlasticityHistory, PlasticityProbe, activation_effective_rank
 from traintools.earlyguard import TrainGuard
 
 
@@ -96,7 +96,7 @@ class TestGNSEdgeCases:
         y = torch.randint(0, 2, (16,))
         result = estimate_gns(model, criterion, x, y)
         assert result.gns >= 0
-        assert result.regime in ("noise-dominated", "optimal", "signal-dominated")
+        assert result.regime in ("under-batched", "optimal", "over-batched")
 
     def test_conv_model(self):
         model = conv_model()
@@ -253,18 +253,19 @@ class TestPlasticityEdgeCases:
         assert result.global_score < 0.5
         probe.remove_hooks()
 
-    def test_rank1_weights(self):
-        """Near-rank-1 weight matrix should have low erank."""
-        W = torch.randn(64, 1) @ torch.randn(1, 64) + 1e-4 * torch.eye(64)
-        er = _effective_rank_normalized(W)
-        assert er < 0.1, f"rank-1 matrix should have low erank, got {er:.3f}"
-
-    def test_full_rank_weights(self):
-        """Random Gaussian matrix should have high erank."""
+    def test_rank1_activations(self):
+        """Colinear activations should have low effective rank."""
         torch.manual_seed(0)
-        W = torch.randn(64, 64)
-        er = _effective_rank_normalized(W)
-        assert er > 0.5, f"random matrix should have high erank, got {er:.3f}"
+        A = torch.randn(512, 1) @ torch.randn(1, 64)
+        er = activation_effective_rank(A)
+        assert er < 0.1, f"rank-1 activations should have low erank, got {er:.3f}"
+
+    def test_full_rank_activations(self):
+        """Isotropic random activations should have high effective rank."""
+        torch.manual_seed(0)
+        A = torch.randn(512, 64)
+        er = activation_effective_rank(A)
+        assert er > 0.5, f"random activations should have high erank, got {er:.3f}"
 
     def test_hook_cleanup(self):
         """Hooks should be fully removed after remove_hooks()."""
@@ -293,14 +294,14 @@ class TestPlasticityEdgeCases:
         probe2.remove_hooks()
 
     def test_reset_activation_buffer(self):
-        """reset_activation_buffer clears stale state between windows."""
+        """reset clears stale activation buffers between windows."""
         model = nn.Sequential(nn.Linear(16, 32), nn.ReLU(), nn.Linear(32, 4))
         probe = PlasticityProbe(model)
         x = torch.randn(16, 16)
         _ = model(x)
-        assert len(probe._activation_buffer) > 0
-        probe.reset_activation_buffer()
-        assert len(probe._activation_buffer) == 0
+        assert len(probe._buffers) > 0
+        probe.reset_buffers()
+        assert len(probe._buffers) == 0
         probe.remove_hooks()
 
     def test_probe_no_forward_pass(self):
@@ -462,8 +463,8 @@ class TestIntegration:
 
         probe.remove_hooks()
 
-    def test_gns_and_plasticity_independent(self):
-        """GNS estimation must not interfere with plasticity hook buffers."""
+    def test_gns_does_not_corrupt_gradients_with_probe(self):
+        """GNS must restore the caller's gradients even with a probe attached."""
         torch.manual_seed(0)
         model = nn.Sequential(nn.Linear(16, 32), nn.ReLU(), nn.Linear(32, 4))
         criterion = nn.CrossEntropyLoss()
@@ -471,21 +472,37 @@ class TestIntegration:
 
         x = torch.randn(32, 16)
         y = torch.randint(0, 4, (32,))
-
-        # Forward to populate activation buffer
         model.zero_grad()
         criterion(model(x), y).backward()
+        grads_before = {n: p.grad.clone() for n, p in model.named_parameters()
+                        if p.grad is not None}
 
-        buf_before = {k: v.clone() for k, v in probe._activation_buffer.items()}
-
-        # GNS should not affect the plasticity hook buffers
         estimate_gns(model, criterion, x, y)
 
-        for k in buf_before:
-            if k in probe._activation_buffer:
-                assert torch.allclose(probe._activation_buffer[k], buf_before[k]), \
-                    f"GNS corrupted plasticity buffer for {k}"
+        for n, p in model.named_parameters():
+            if p.grad is not None:
+                assert torch.allclose(p.grad, grads_before[n], atol=1e-6), \
+                    f"GNS corrupted gradient for {n}"
+        probe.remove_hooks()
 
+    def test_probe_pause_blocks_capture(self):
+        """A paused probe must not accumulate activations during GNS passes."""
+        torch.manual_seed(0)
+        model = nn.Sequential(nn.Linear(16, 32), nn.ReLU(), nn.Linear(32, 4))
+        criterion = nn.CrossEntropyLoss()
+        probe = PlasticityProbe(model)
+        x = torch.randn(32, 16)
+        y = torch.randint(0, 4, (32,))
+
+        _ = model(x)  # one real forward populates the buffer
+        buf_before = {k: v.clone() for k, v in probe._buffers.items()}
+
+        with probe.paused():
+            estimate_gns(model, criterion, x, y)  # several eval-mode forwards
+
+        for k, v in buf_before.items():
+            assert torch.allclose(probe._buffers[k], v), \
+                f"paused probe still captured activations for {k}"
         probe.remove_hooks()
 
     def test_probe_garbage_collected(self):

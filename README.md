@@ -43,42 +43,75 @@ trainer = Trainer(model=model, ..., callbacks=[TraintoolsCallback()])
 
 ## Gradient Noise Scale (GNS)
 
-GNS measures the ratio of gradient signal to noise across your batch:
+GNS is the ratio of per-example gradient variance to gradient signal:
 
 ```
-GNS = B * Var[g] / ||E[g]||^2
+GNS = tr(Σ) / ||G||^2
 ```
 
-When `GNS >> B` your batch is too small — gradient quality improves with more data.  
-When `GNS << B` your batch is too large — you're wasting compute.  
-When `GNS ≈ B` you're at the efficient frontier.
+It equals the critical batch size B* — the point of diminishing returns from
+larger batches.
 
-Output:
+- `GNS > B`  → **under-batched**: gradient too noisy, larger batches help
+- `GNS < B`  → **over-batched**: batch larger than needed, shrink it and save compute
+- `GNS ≈ B`  → **optimal**
+
+`traintools` uses the *unbiased* estimators from McCandlish et al. 2018
+(Bessel-corrected variance, bias-corrected signal) and tracks GNS as the ratio
+of two separate exponential moving averages — the stable estimator the paper
+recommends. (Naive single-shot estimates are biased low by ~2x and far too
+noisy to act on.)
 
 ```
-[step 100] GNS=36.1  critical_batch=36  current=64  regime=optimal
-  > Batch size 64 is near the critical batch size (36). No change needed.
+[step 500] GNS=5010.7 (EMA)  critical_batch=5011  current=64  regime=under-batched
+  > Batch size 64 is ~78x below the critical batch (~5011). Larger batches would give cleaner gradients per step.
+```
+
+### Free GNS during gradient accumulation
+
+If you already use gradient accumulation, GNS costs **zero extra forward/backward
+passes** — the per-micro-batch gradients you compute anyway are exactly the
+samples GNS needs. Every other GNS implementation pays for extra passes.
+
+```python
+from traintools import GradientAccumulationGNS
+
+gns = GradientAccumulationGNS(model, micro_batch_size=B_micro)
+
+for step in range(num_steps):
+    for micro in micro_batches:
+        (loss_fn(model(xm), ym) / accum_steps).backward()
+        gns.record_microbatch()          # after each micro-batch backward
+    optimizer.step()
+    result = gns.compute(step=step)      # GNSResult, free
+    optimizer.zero_grad()
+    gns.reset_accumulation()
 ```
 
 Reference: McCandlish et al. 2018, *An Empirical Model of Large-Batch Training*.
 
 ## PlasticityProbe
 
-Networks lose plasticity over long training runs or repeated fine-tuning. PlasticityProbe
-tracks three signals per layer:
+Networks lose plasticity over long training runs or repeated fine-tuning. The
+failure shows up in the *representations*, so PlasticityProbe measures the
+activations directly (not weight matrices), matching the operational definitions
+in the loss-of-plasticity literature:
 
-- **Dead neuron fraction** — neurons that never activate on any batch sample
-- **Effective rank** — how collapsed the weight matrix spectrum is
-- **Gradient/weight ratio** — whether a layer is still receiving meaningful updates
+- **Dormant unit fraction** — units whose activation is ~0 for every input,
+  attributed to the activation module that produced them
+- **Feature effective rank** — effective rank of the activation covariance,
+  normalised to [0,1]; low rank = representational collapse
 
 Combined into a **Plasticity Score ∈ [0, 1]** (1 = fully plastic, 0 = dead).
 
 ```
-[step 200] Plasticity Score: 0.968
+[step 200] Plasticity Score: 0.706
   All layers healthy.
 ```
 
-Reference: Lyle et al. 2023, *Understanding Plasticity in Neural Networks*.
+References: Dohare & Sutton et al. 2024 (*Nature* 632:768), *Loss of plasticity
+in deep continual learning*; Lyle et al. 2023, *Understanding Plasticity in
+Neural Networks*.
 
 ## TrainGuard
 

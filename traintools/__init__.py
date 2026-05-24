@@ -18,13 +18,17 @@ Quick start (HuggingFace Trainer):
     trainer = Trainer(model=model, ..., callbacks=[TraintoolsCallback()])
 """
 
-from traintools.gradnoise import estimate_gns, GNSResult, GNSHistory
-from traintools.plasticity import PlasticityProbe, PlasticityResult, PlasticityHistory
+from traintools.gradnoise import (
+    estimate_gns, GNSResult, GNSHistory, GNSEstimator, GradientAccumulationGNS,
+)
+from traintools.plasticity import (
+    PlasticityProbe, PlasticityResult, PlasticityHistory, activation_effective_rank,
+)
 from traintools.earlyguard import TrainGuard, EarlyStopDecision
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __all__ = [
-    "estimate_gns", "GNSResult", "GNSHistory",
-    "PlasticityProbe", "PlasticityResult", "PlasticityHistory",
+    "estimate_gns", "GNSResult", "GNSHistory", "GNSEstimator", "GradientAccumulationGNS",
+    "PlasticityProbe", "PlasticityResult", "PlasticityHistory", "activation_effective_rank",
     "TrainGuard", "EarlyStopDecision",
 ]

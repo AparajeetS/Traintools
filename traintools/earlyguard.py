@@ -94,7 +94,8 @@ def _fit_curve(
 
 def _power_law_np(t, a, b, c):
     import numpy as np
-    return a + b * np.power(np.maximum(t, 1e-6), -c)
+    with np.errstate(over="ignore", invalid="ignore"):
+        return a + b * np.power(np.maximum(t, 1e-6), -c)
 
 
 def _exp_decay_np(t, a, b, c):

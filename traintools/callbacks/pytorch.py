@@ -1,33 +1,29 @@
 """
-Raw PyTorch training loop integration for traintools.
+Raw PyTorch training-loop integration for traintools.
 
-For users not using HuggingFace Trainer.
+Two GNS modes:
 
-Usage:
-    from traintools.callbacks.pytorch import TraintoolsTracker
+  (A) Extra-pass mode (default) — call tracker.step(...) with the current batch;
+      GNS is estimated with a few extra eval-mode forward/backward passes.
 
-    tracker = TraintoolsTracker(
-        model=model,
-        loss_fn=criterion,
-        gns_freq=200,
-        plasticity_freq=200,
-        earlyguard=True,
-    )
+        tracker = TraintoolsTracker(model, loss_fn)
+        for step, (x, y) in enumerate(loader):
+            loss = loss_fn(model(x), y); loss.backward()
+            optimizer.step(); optimizer.zero_grad()
+            tracker.step(step=step, inputs=x, targets=y, val_loss=val_loss)
 
-    for epoch in range(epochs):
-        for step, (inputs, targets) in enumerate(dataloader):
-            outputs = model(inputs)
-            loss = criterion(outputs, targets)
-            loss.backward()
+  (B) Free accumulation mode — if you already use gradient accumulation, GNS is
+      computed at ZERO extra cost from the micro-batch gradients you compute anyway:
+
+        tracker = TraintoolsTracker(model, loss_fn, gns_free_accum=True,
+                                    micro_batch_size=B_micro)
+        for step in range(num_steps):
+            for micro in micro_batches:
+                (loss_fn(model(xm), ym) / n_accum).backward()
+                tracker.record_microbatch()          # after each backward
             optimizer.step()
+            tracker.step(step=step, val_loss=val_loss)  # no inputs/targets needed
             optimizer.zero_grad()
-
-            tracker.step(
-                step=global_step,
-                inputs=inputs,
-                targets=targets,
-                val_loss=val_loss,  # optional, pass when available
-            )
 """
 
 from __future__ import annotations
@@ -38,16 +34,13 @@ import torch
 import torch.nn as nn
 
 from traintools.earlyguard import EarlyStopDecision, TrainGuard
-from traintools.gradnoise import GNSHistory, GNSResult, estimate_gns
-from traintools.plasticity import PlasticityHistory, PlasticityProbe, PlasticityResult
+from traintools.gradnoise import (
+    GNSEstimator, GNSHistory, GradientAccumulationGNS, estimate_gns,
+)
+from traintools.plasticity import PlasticityHistory, PlasticityProbe
 
 
 class TraintoolsTracker:
-    """
-    Convenience wrapper for raw PyTorch training loops.
-    Tracks GNS, plasticity, and optional early stopping.
-    """
-
     def __init__(
         self,
         model: nn.Module,
@@ -59,6 +52,10 @@ class TraintoolsTracker:
         patience_steps: int = 1000,
         horizon_steps: int = 500,
         per_layer_gns: bool = False,
+        gns_splits: int = 2,
+        gns_ema_decay: float = 0.95,
+        gns_free_accum: bool = False,
+        micro_batch_size: Optional[int] = None,
         verbose: bool = True,
     ) -> None:
         self.model = model
@@ -66,6 +63,7 @@ class TraintoolsTracker:
         self.gns_freq = gns_freq
         self.plasticity_freq = plasticity_freq
         self.per_layer_gns = per_layer_gns
+        self.gns_splits = gns_splits
         self.verbose = verbose
 
         self._probe = PlasticityProbe(model)
@@ -77,7 +75,26 @@ class TraintoolsTracker:
             horizon_steps=horizon_steps,
         ) if earlyguard else None
 
-        self._plasticity_window_start = 0
+        # Free accumulation path
+        self.gns_free_accum = gns_free_accum
+        if gns_free_accum:
+            if micro_batch_size is None:
+                raise ValueError("micro_batch_size is required when gns_free_accum=True")
+            self._accum_gns = GradientAccumulationGNS(model, micro_batch_size, decay=gns_ema_decay)
+        else:
+            self._accum_gns = None
+            # EMA estimator for the extra-pass path lives inside estimate_gns calls;
+            # we keep a persistent one to smooth across calls.
+            self._gns_estimator = GNSEstimator(decay=gns_ema_decay)
+
+    # ── Free-accumulation hook ────────────────────────────────────────────────
+
+    def record_microbatch(self) -> None:
+        """Free-accumulation mode: call after each micro-batch backward()."""
+        if self._accum_gns is not None:
+            self._accum_gns.record_microbatch()
+
+    # ── Main per-step entry point ─────────────────────────────────────────────
 
     def step(
         self,
@@ -86,46 +103,47 @@ class TraintoolsTracker:
         targets: Optional[torch.Tensor] = None,
         val_loss: Optional[float] = None,
     ) -> Optional[EarlyStopDecision]:
-        """
-        Call once per optimizer step.
-
-        Args:
-            step:     current global training step
-            inputs:   current batch inputs (needed for GNS estimation)
-            targets:  current batch targets (needed for GNS estimation)
-            val_loss: current validation loss (needed for TrainGuard)
-
-        Returns:
-            EarlyStopDecision if TrainGuard fires, else None.
-        """
-        # ── GNS ───────────────────────────────────────────────────────────────
-        if (inputs is not None and targets is not None and
-                step > 0 and step % self.gns_freq == 0):
+        # ── GNS ──────────────────────────────────────────────────────────────
+        if self._accum_gns is not None:
+            # Free path: compute from recorded micro-batches every gns_freq steps.
+            if step > 0 and step % self.gns_freq == 0:
+                result = self._accum_gns.compute(step=step)
+                if result is not None:
+                    self._gns_history.record(result)
+                    if self.verbose:
+                        print(f"\n[traintools:GNS]\n{result}")
+            self._accum_gns.reset_accumulation()
+        elif (inputs is not None and targets is not None
+              and step > 0 and step % self.gns_freq == 0):
             try:
-                result = estimate_gns(
-                    model=self.model,
-                    loss_fn=self.loss_fn,
-                    inputs=inputs,
-                    targets=targets,
-                    step=step,
-                    per_layer=self.per_layer_gns,
+                # Pause the plasticity probe so GNS's diagnostic forward passes
+                # don't pollute the activation buffer.
+                with self._probe.paused():
+                    raw = estimate_gns(
+                        self.model, self.loss_fn, inputs, targets,
+                        n_splits=self.gns_splits, step=step, per_layer=self.per_layer_gns,
+                    )
+                # Smooth across calls via the persistent EMA estimator.
+                smoothed = self._gns_estimator.update_from_estimates(
+                    raw.tr_sigma, raw.g_squared, raw.current_batch,
+                    step=step, per_layer=raw.per_layer,
                 )
-                self._gns_history.record(result)
+                self._gns_history.record(smoothed)
                 if self.verbose:
-                    print(f"\n[traintools:GNS]\n{result}")
+                    print(f"\n[traintools:GNS]\n{smoothed}")
             except Exception as e:
                 if self.verbose:
                     print(f"[traintools:GNS] estimation failed: {e}")
 
-        # ── Plasticity ────────────────────────────────────────────────────────
+        # ── Plasticity ─────────────────────────────────────────────────────────
         if step > 0 and step % self.plasticity_freq == 0:
             result_p = self._probe.measure(step=step)
             self._plasticity_history.record(result_p)
-            self._probe.reset_activation_buffer()
+            self._probe.reset_buffers()
             if self.verbose:
                 print(f"\n[traintools:Plasticity]\n{result_p}")
 
-        # ── TrainGuard ────────────────────────────────────────────────────────
+        # ── TrainGuard ───────────────────────────────────────────────────────
         if self._guard is not None and val_loss is not None:
             self._guard.record(step=step, val_loss=val_loss)
             decision = self._guard.evaluate()
@@ -133,8 +151,9 @@ class TraintoolsTracker:
                 print(f"\n[traintools:TrainGuard]\n{decision}")
             if decision.should_stop:
                 return decision
-
         return None
+
+    # ── Accessors / plotting ──────────────────────────────────────────────────
 
     @property
     def gns_history(self) -> GNSHistory:
@@ -149,7 +168,6 @@ class TraintoolsTracker:
         return self._guard
 
     def plot(self):
-        """Plot all three metrics side by side. Requires matplotlib."""
         import matplotlib.pyplot as plt
         fig, axes = plt.subplots(1, 3, figsize=(15, 3))
         self._gns_history.plot(ax=axes[0])
