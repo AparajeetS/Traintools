@@ -220,7 +220,13 @@ class TrainGuard:
             improvement = current_loss - predicted_final
             steps_to_plateau = None
 
-        if improvement <= self.min_improvement:
+        if improvement < 0:
+            # Predicted final loss is higher than current — curve fit is unstable.
+            # Don't fire a false STOP; fall back to patience check only.
+            should_stop = False
+            reason = (f"Curve fit unstable (predicted improvement {improvement:.6f} < 0). "
+                      f"Defaulting to patience check — no stop signal.")
+        elif improvement <= self.min_improvement:
             should_stop = True
             reason = (f"Predicted improvement over next {self.horizon_steps} steps is "
                       f"{improvement:.6f} < threshold {self.min_improvement:.6f}.")
