@@ -77,3 +77,7 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          # Don't fail the pipeline if a file for this version is already on PyPI
+          # (e.g. a release re-run, or a version published manually).
+          skip-existing: true
