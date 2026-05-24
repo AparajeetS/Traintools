@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traintools"
-version = "0.1.0"
-description = "Training diagnostics for PyTorch: Gradient Noise Scale, Plasticity Probe, and probabilistic early stopping"
+version = "0.2.0"
+description = "Training diagnostics for PyTorch: Gradient Noise Scale (free during gradient accumulation), Plasticity Probe, and probabilistic early stopping"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
