@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "traintools"
+version = "0.1.0"
+description = "Training diagnostics for PyTorch: Gradient Noise Scale, Plasticity Probe, and probabilistic early stopping"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+keywords = ["pytorch", "machine-learning", "training", "diagnostics", "optimizer"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.0",
+]
+
+[project.optional-dependencies]
+full = ["scipy", "numpy", "matplotlib"]
+hf = ["transformers>=4.30"]
+dev = ["pytest", "scipy", "numpy", "matplotlib", "transformers>=4.30"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["traintools*"]
