@@ -4,15 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traintools"
-version = "0.2.0"
-description = "Training diagnostics for PyTorch: Gradient Noise Scale (free during gradient accumulation), Plasticity Probe, and probabilistic early stopping"
+version = "0.5.1"
+description = "Paper-backed ML training diagnostics for PyTorch: GNS, plasticity, example dynamics, AUM, EL2N, neural collapse, and health checks"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
-keywords = ["pytorch", "machine-learning", "training", "diagnostics", "optimizer"]
+authors = [{ name = "Aparajeet S" }]
+keywords = ["pytorch", "machine-learning", "training", "diagnostics", "optimizer", "debugging", "dataset-quality"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
@@ -24,6 +26,12 @@ dependencies = [
 full = ["scipy", "numpy", "matplotlib"]
 hf = ["transformers>=4.30"]
 dev = ["pytest", "scipy", "numpy", "matplotlib", "transformers>=4.30"]
+
+[project.urls]
+Homepage = "https://github.com/AparajeetS/Traintools"
+Source = "https://github.com/AparajeetS/Traintools"
+Issues = "https://github.com/AparajeetS/Traintools/issues"
+PyPI = "https://pypi.org/project/traintools/"
 
 [tool.setuptools.packages.find]
 where = ["."]

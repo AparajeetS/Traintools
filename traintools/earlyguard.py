@@ -279,6 +279,8 @@ class TrainGuard:
                 fn = _exp_decay_np
 
             residual = float(np.mean((y - y_pred) ** 2))
+            if not math.isfinite(residual):
+                continue
             if residual < best_residual:
                 best_residual = residual
                 t_future = self._steps[-1] + self.horizon_steps
@@ -287,9 +289,14 @@ class TrainGuard:
                 rng_samples = []
                 for _ in range(200):
                     p_sample = popt + np.random.randn(len(popt)) * perr
-                    rng_samples.append(float(fn(t_future, *p_sample)))
-                ci_lo = float(np.percentile(rng_samples, 5))
-                ci_hi = float(np.percentile(rng_samples, 95))
+                    sample = float(fn(t_future, *p_sample))
+                    if math.isfinite(sample):
+                        rng_samples.append(sample)
+                if len(rng_samples) >= 5:
+                    ci_lo = float(np.percentile(rng_samples, 5))
+                    ci_hi = float(np.percentile(rng_samples, 95))
+                else:
+                    ci_lo = ci_hi = pred
                 best_result = (pred, (ci_lo, ci_hi))
 
         return best_result
