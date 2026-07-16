@@ -1,6 +1,6 @@
 # traintools
 
-<!-- mcp-name: io.github.aparajeets/traintools -->
+<!-- mcp-name: io.github.AparajeetS/traintools -->
 
 [![CI](https://github.com/AparajeetS/Traintools/actions/workflows/ci.yml/badge.svg)](https://github.com/AparajeetS/Traintools/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/traintools.svg)](https://pypi.org/project/traintools/)

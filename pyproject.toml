@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traintools"
-version = "0.6.1"
+version = "0.6.2"
 description = "Agent-ready, paper-backed PyTorch training diagnostics for gradients, batches, data quality, plasticity, and stopping"
 readme = "README.md"
 requires-python = ">=3.9"

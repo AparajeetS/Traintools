@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.2 - 2026-07-17
+
+- Preserve the case-sensitive GitHub namespace required by MCP Registry OIDC.
+
 ## 0.6.1 - 2026-07-17
 
 - Add official MCP Registry metadata and PyPI ownership verification.

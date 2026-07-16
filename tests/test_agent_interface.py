@@ -32,7 +32,7 @@ def test_version_matches_project_metadata() -> None:
 def test_mcp_registry_metadata_matches_release() -> None:
     manifest = json.loads((ROOT / "server.json").read_text(encoding="utf-8"))
     package = manifest["packages"][0]
-    assert manifest["name"] == "io.github.aparajeets/traintools"
+    assert manifest["name"] == "io.github.AparajeetS/traintools"
     assert manifest["version"] == traintools.__version__
     assert package["identifier"] == "traintools"
     assert package["version"] == traintools.__version__

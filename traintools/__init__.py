@@ -50,7 +50,7 @@ from traintools.capabilities import (
 )
 from traintools.reporting import report_envelope, to_jsonable, write_json_report
 
-__version__ = "0.6.1"
+__version__ = "0.6.2"
 __all__ = [
     "estimate_gns", "GNSResult", "GNSHistory", "GNSEstimator", "GradientAccumulationGNS",
     "PlasticityProbe", "PlasticityResult", "PlasticityHistory", "activation_effective_rank",
