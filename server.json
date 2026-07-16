@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.aparajeets/traintools",
+  "title": "TrainTools",
+  "description": "Recommend paper-backed diagnostics for PyTorch and Hugging Face training problems.",
+  "version": "0.6.1",
+  "websiteUrl": "https://github.com/AparajeetS/Traintools",
+  "repository": {
+    "url": "https://github.com/AparajeetS/Traintools",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "traintools",
+      "version": "0.6.1",
+      "runtimeHint": "uvx",
+      "runtimeArguments": [
+        {
+          "type": "named",
+          "name": "--with",
+          "value": "mcp"
+        }
+      ],
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        }
+      ],
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

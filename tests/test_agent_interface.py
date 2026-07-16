@@ -29,6 +29,18 @@ def test_version_matches_project_metadata() -> None:
     assert traintools.__version__ == match.group(1)
 
 
+def test_mcp_registry_metadata_matches_release() -> None:
+    manifest = json.loads((ROOT / "server.json").read_text(encoding="utf-8"))
+    package = manifest["packages"][0]
+    assert manifest["name"] == "io.github.aparajeets/traintools"
+    assert manifest["version"] == traintools.__version__
+    assert package["identifier"] == "traintools"
+    assert package["version"] == traintools.__version__
+    assert package["transport"] == {"type": "stdio"}
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert f"mcp-name: {manifest['name']}" in readme
+
+
 def test_registry_ids_are_unique_and_docs_exist() -> None:
     capabilities = list_capabilities()
     ids = [item["id"] for item in capabilities]
@@ -102,6 +114,13 @@ def test_cli_json_and_abstention(capsys) -> None:
     assert main(["recommend", "make it good", "--json"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["abstained"] is True
+
+
+def test_cli_mcp_subcommand_uses_server_entrypoint(monkeypatch) -> None:
+    calls = []
+    monkeypatch.setattr("traintools.mcp_server.main", lambda: calls.append("run"))
+    assert main(["mcp"]) == 0
+    assert calls == ["run"]
 
 
 def test_exported_capability_manifests_match_registry() -> None:

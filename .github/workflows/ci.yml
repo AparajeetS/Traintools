@@ -108,3 +108,26 @@ jobs:
           # Don't fail the pipeline if a file for this version is already on PyPI
           # (e.g. a release re-run, or a version published manually).
           skip-existing: true
+
+  publish-mcp:
+    name: Publish to MCP Registry
+    runs-on: ubuntu-latest
+    needs: publish
+    if: github.event_name == 'release'
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install MCP Registry publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+
+      - name: Authenticate to MCP Registry
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish server
+        run: ./mcp-publisher publish

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1 - 2026-07-17
+
+- Add official MCP Registry metadata and PyPI ownership verification.
+- Add `traintools mcp` for a stable registry-compatible stdio launch command.
+
 ## 0.6.0 - 2026-07-16
 
 - Add a machine-readable capability registry and symptom-based recommender.

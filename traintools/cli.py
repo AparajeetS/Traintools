@@ -76,6 +76,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--framework", choices=("pytorch", "huggingface"), default="pytorch"
     )
     integration_parser.add_argument("--json", action="store_true")
+
+    subparsers.add_parser(
+        "mcp", help="Run the optional local MCP server over stdio."
+    )
     return parser
 
 
@@ -126,6 +130,11 @@ def main(argv: Optional[List[str]] = None) -> int:
                 )
             else:
                 print(snippet)
+            return 0
+        if args.command == "mcp":
+            from traintools.mcp_server import main as run_mcp_server
+
+            run_mcp_server()
             return 0
     except ValueError as exc:
         print(f"traintools: {exc}")

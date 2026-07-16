@@ -1,5 +1,7 @@
 # traintools
 
+<!-- mcp-name: io.github.aparajeets/traintools -->
+
 [![CI](https://github.com/AparajeetS/Traintools/actions/workflows/ci.yml/badge.svg)](https://github.com/AparajeetS/Traintools/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/traintools.svg)](https://pypi.org/project/traintools/)
 [![Python](https://img.shields.io/pypi/pyversions/traintools.svg)](https://pypi.org/project/traintools/)
@@ -30,6 +32,13 @@ or the optional local MCP server:
 ```bash
 pip install "traintools[mcp]"
 traintools-mcp
+```
+
+The same local, read-only server is discoverable through the official MCP
+Registry and can be launched without a persistent install:
+
+```bash
+uvx --with mcp traintools mcp
 ```
 
 ## Tools
