@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AparajeetS/Traintools/schemas/report-envelope.schema.json",
+  "title": "TrainTools report envelope",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "package",
+    "package_version",
+    "diagnostic",
+    "report"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "package": {
+      "const": "traintools"
+    },
+    "package_version": {
+      "type": "string"
+    },
+    "diagnostic": {
+      "type": "string",
+      "minLength": 1
+    },
+    "report": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If TrainTools helps your research, cite the software and the underlying diagnostic papers."
+title: "TrainTools: Paper-backed PyTorch training diagnostics"
+type: software
+authors:
+  - family-names: Shadangi
+    given-names: Aparajeet
+repository-code: "https://github.com/AparajeetS/Traintools"
+url: "https://pypi.org/project/traintools/"
+license: MIT
+version: 0.6.0
+date-released: 2026-07-16

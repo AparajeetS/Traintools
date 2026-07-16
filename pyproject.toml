@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "traintools"
-version = "0.5.1"
-description = "Paper-backed ML training diagnostics for PyTorch: GNS, plasticity, example dynamics, AUM, EL2N, neural collapse, and health checks"
+version = "0.6.0"
+description = "Agent-ready, paper-backed PyTorch training diagnostics for gradients, batches, data quality, plasticity, and stopping"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
 authors = [{ name = "Aparajeet S" }]
-keywords = ["pytorch", "machine-learning", "training", "diagnostics", "optimizer", "debugging", "dataset-quality"]
+keywords = ["pytorch", "machine-learning", "training", "diagnostics", "optimizer", "debugging", "dataset-quality", "gradient-noise-scale", "early-stopping", "mcp"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
@@ -25,7 +25,12 @@ dependencies = [
 [project.optional-dependencies]
 full = ["scipy", "numpy", "matplotlib"]
 hf = ["transformers>=4.30"]
+mcp = ["mcp>=1.2"]
 dev = ["pytest", "scipy", "numpy", "matplotlib", "transformers>=4.30"]
+
+[project.scripts]
+traintools = "traintools.cli:main"
+traintools-mcp = "traintools.mcp_server:main"
 
 [project.urls]
 Homepage = "https://github.com/AparajeetS/Traintools"
@@ -36,3 +41,6 @@ PyPI = "https://pypi.org/project/traintools/"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["traintools*"]
+
+[tool.setuptools.package-data]
+traintools = ["data/*.json"]

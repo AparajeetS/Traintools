@@ -10,8 +10,26 @@ practical questions while a run is still alive.
 
 [Source on GitHub](https://github.com/AparajeetS/Traintools) | [PyPI](https://pypi.org/project/traintools/)
 
+Have a real run or false alarm to share? Use the
+[diagnostic report template](https://github.com/AparajeetS/Traintools/issues/new?template=diagnostic-report.yml).
+
 ```bash
 pip install traintools
+```
+
+Not sure which tool fits the problem?
+
+```bash
+traintools recommend "my loss became NaN and gradients explode"
+traintools integration gradient-health --framework pytorch
+```
+
+Agents can use the JSON CLI, [the agent guide](https://github.com/AparajeetS/Traintools/blob/main/AGENTS.md), [llms.txt](https://github.com/AparajeetS/Traintools/blob/main/llms.txt),
+or the optional local MCP server:
+
+```bash
+pip install "traintools[mcp]"
+traintools-mcp
 ```
 
 ## Tools
@@ -299,6 +317,9 @@ pip install traintools[full]
 # HuggingFace Trainer integration
 pip install traintools[hf]
 
+# Local MCP server for compatible AI clients
+pip install traintools[mcp]
+
 # Development
 pip install -e ".[dev]"
 ```
@@ -309,6 +330,9 @@ pip install -e ".[dev]"
 well-tested, but thresholds are heuristics and should be interpreted as training
 signals, not automatic truth. Bug reports, benchmark traces, and real-world
 failure cases are especially welcome.
+
+Problem-oriented guides live in [the documentation](https://github.com/AparajeetS/Traintools/tree/main/docs/problems). Diagnostic
+objects can be written as versioned JSON with `write_json_report`.
 
 ## References
 

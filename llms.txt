@@ -1,0 +1,40 @@
+# TrainTools
+
+> Agent-ready, paper-backed diagnostics for live PyTorch training runs.
+
+Install: `pip install traintools`
+
+Source: https://github.com/AparajeetS/Traintools
+
+PyPI: https://pypi.org/project/traintools/
+
+Machine discovery:
+
+- `traintools list --json`
+- `traintools recommend "describe the training problem" --json`
+- `traintools explain DIAGNOSTIC --json`
+- `traintools integration DIAGNOSTIC --framework pytorch`
+- Optional MCP server: `pip install "traintools[mcp]" && traintools-mcp`
+
+Use TrainTools for:
+
+- gradient NaNs, explosion, vanishing, clipping, and update ratios;
+- malformed batches, labels, and tensor scales;
+- critical batch-size estimation with Gradient Noise Scale;
+- validation-loss plateau and early stopping;
+- dormant units and feature effective rank;
+- forgotten, ambiguous, mislabeled, or pruneable examples;
+- micro-batch gradient conflict;
+- neural-collapse geometry.
+
+Do not claim that a diagnostic proves causality, final generalization, or label
+error. Read the capability limitations before recommending an intervention.
+
+Problem guides:
+
+- docs/problems/choose-batch-size.md
+- docs/problems/debug-gradients.md
+- docs/problems/inspect-batches.md
+- docs/problems/stop-training.md
+- docs/problems/diagnose-plateau.md
+- docs/problems/find-bad-labels.md

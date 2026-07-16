@@ -1,7 +1,7 @@
 """
 traintools — training diagnostics for PyTorch models.
 
-Five tools:
+Included diagnostics:
   GNS (Gradient Noise Scale): are you using the right batch size?
   PlasticityProbe:            is your network losing the ability to learn?
   TrainGuard:                 should you stop training yet?
@@ -45,8 +45,12 @@ from traintools.confusion import (
 from traintools.aum import AUMTracker, AUMExample, AUMSummary
 from traintools.importance import EL2NTracker, EL2NExample, EL2NSummary, el2n_scores
 from traintools.collapse import NeuralCollapseMonitor, NeuralCollapseResult
+from traintools.capabilities import (
+    get_capability, integration_snippet, list_capabilities, recommend_diagnostics,
+)
+from traintools.reporting import report_envelope, to_jsonable, write_json_report
 
-__version__ = "0.5.1"
+__version__ = "0.6.0"
 __all__ = [
     "estimate_gns", "GNSResult", "GNSHistory", "GNSEstimator", "GradientAccumulationGNS",
     "PlasticityProbe", "PlasticityResult", "PlasticityHistory", "activation_effective_rank",
@@ -58,4 +62,6 @@ __all__ = [
     "AUMTracker", "AUMExample", "AUMSummary",
     "EL2NTracker", "EL2NExample", "EL2NSummary", "el2n_scores",
     "NeuralCollapseMonitor", "NeuralCollapseResult",
+    "get_capability", "integration_snippet", "list_capabilities", "recommend_diagnostics",
+    "report_envelope", "to_jsonable", "write_json_report",
 ]

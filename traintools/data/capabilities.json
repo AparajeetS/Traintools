@@ -1,0 +1,346 @@
+{
+  "schema_version": 1,
+  "package": "traintools",
+  "diagnostics": [
+    {
+      "id": "gradient-noise-scale",
+      "name": "Gradient Noise Scale",
+      "import_path": "traintools.GradientAccumulationGNS",
+      "summary": "Estimate critical batch size and whether larger batches are likely to help.",
+      "questions": [
+        "Is my batch size wasting compute?",
+        "Should I increase or decrease batch size?"
+      ],
+      "keywords": [
+        "batch size",
+        "critical batch",
+        "gradient noise",
+        "gns",
+        "throughput",
+        "gradient accumulation",
+        "scaling"
+      ],
+      "frameworks": [
+        "pytorch",
+        "huggingface"
+      ],
+      "requires": [
+        "model gradients",
+        "at least two gradient samples"
+      ],
+      "call_timing": "During training, preferably from gradient-accumulation micro-batches.",
+      "limitations": [
+        "Estimates optimization efficiency, not final generalization.",
+        "Extra-pass mode adds forward/backward work."
+      ],
+      "docs": "docs/problems/choose-batch-size.md",
+      "citation": "McCandlish et al. (2018), An Empirical Model of Large-Batch Training."
+    },
+    {
+      "id": "gradient-health",
+      "name": "Gradient Health Monitor",
+      "import_path": "traintools.GradientHealthMonitor",
+      "summary": "Detect non-finite, vanished, exploded, clipped, or disproportionate gradients.",
+      "questions": [
+        "Why did my loss become NaN?",
+        "Are my gradients exploding or vanishing?"
+      ],
+      "keywords": [
+        "nan",
+        "inf",
+        "gradient",
+        "explode",
+        "exploding",
+        "vanish",
+        "vanishing",
+        "clip",
+        "unstable",
+        "diverge",
+        "update ratio"
+      ],
+      "frameworks": [
+        "pytorch"
+      ],
+      "requires": [
+        "loss.backward() completed"
+      ],
+      "call_timing": "After backward() and before optimizer.step().",
+      "limitations": [
+        "Thresholds are heuristics and depend on architecture and optimizer.",
+        "The update ratio is an SGD-style approximation."
+      ],
+      "docs": "docs/problems/debug-gradients.md",
+      "citation": "Operational diagnostic; reports established gradient and update statistics."
+    },
+    {
+      "id": "batch-inspector",
+      "name": "Batch Inspector",
+      "import_path": "traintools.BatchInspector",
+      "summary": "Catch malformed tensors, non-finite values, extreme scales, and label problems.",
+      "questions": [
+        "Is this training batch broken?",
+        "Why does training fail immediately?"
+      ],
+      "keywords": [
+        "batch",
+        "data",
+        "input",
+        "label",
+        "class imbalance",
+        "constant tensor",
+        "scale",
+        "dtype",
+        "shape",
+        "broken"
+      ],
+      "frameworks": [
+        "pytorch"
+      ],
+      "requires": [
+        "input batch"
+      ],
+      "call_timing": "Before the forward pass, or periodically at data-loader boundaries.",
+      "limitations": [
+        "A healthy batch does not prove the whole dataset is correct.",
+        "Class checks assume classification-style targets."
+      ],
+      "docs": "docs/problems/inspect-batches.md",
+      "citation": "Operational diagnostic."
+    },
+    {
+      "id": "train-guard",
+      "name": "TrainGuard",
+      "import_path": "traintools.TrainGuard",
+      "summary": "Estimate whether continuing training is likely to improve validation loss.",
+      "questions": [
+        "Should I stop training?",
+        "Has validation loss plateaued?"
+      ],
+      "keywords": [
+        "early stop",
+        "early stopping",
+        "plateau",
+        "validation loss",
+        "wasting compute",
+        "convergence",
+        "stop training"
+      ],
+      "frameworks": [
+        "pytorch",
+        "huggingface"
+      ],
+      "requires": [
+        "validation-loss history"
+      ],
+      "call_timing": "After each validation evaluation.",
+      "limitations": [
+        "Curve extrapolation can fail after regime changes.",
+        "Treat stop signals as advice, especially with sparse evaluations."
+      ],
+      "docs": "docs/problems/stop-training.md",
+      "citation": "Related to Domhan et al. (2015), learning-curve extrapolation."
+    },
+    {
+      "id": "plasticity",
+      "name": "Plasticity Probe",
+      "import_path": "traintools.PlasticityProbe",
+      "summary": "Measure dormant units and feature effective rank during training.",
+      "questions": [
+        "Is my network losing plasticity?",
+        "Are hidden features collapsing or becoming dormant?"
+      ],
+      "keywords": [
+        "plasticity",
+        "dormant",
+        "dead neuron",
+        "feature rank",
+        "effective rank",
+        "representation collapse",
+        "continual learning"
+      ],
+      "frameworks": [
+        "pytorch",
+        "huggingface"
+      ],
+      "requires": [
+        "representative forward passes"
+      ],
+      "call_timing": "Attach before training and measure after representative batches.",
+      "limitations": [
+        "Activation thresholds depend on architecture and normalization.",
+        "Low plasticity is a diagnostic signal, not a guaranteed intervention target."
+      ],
+      "docs": "docs/problems/diagnose-plateau.md",
+      "citation": "Dohare et al. (2024) and Lyle et al. (2023)."
+    },
+    {
+      "id": "example-dynamics",
+      "name": "Example Dynamics Tracker",
+      "import_path": "traintools.ExampleDynamicsTracker",
+      "summary": "Track forgetting, confidence, variability, and ambiguous examples.",
+      "questions": [
+        "Which examples are repeatedly forgotten?",
+        "Which data points are hard or ambiguous?"
+      ],
+      "keywords": [
+        "forgetting",
+        "forgotten",
+        "ambiguous",
+        "hard example",
+        "dataset cartography",
+        "confidence",
+        "variability"
+      ],
+      "frameworks": [
+        "pytorch"
+      ],
+      "requires": [
+        "stable example IDs",
+        "classification logits",
+        "labels"
+      ],
+      "call_timing": "Update after each example's forward pass.",
+      "limitations": [
+        "Requires stable IDs across epochs.",
+        "Hard examples are not necessarily mislabeled."
+      ],
+      "docs": "docs/problems/find-bad-labels.md",
+      "citation": "Toneva et al. (2019); Swayamdipta et al. (2020)."
+    },
+    {
+      "id": "aum",
+      "name": "AUM Tracker",
+      "import_path": "traintools.AUMTracker",
+      "summary": "Rank potentially mislabeled or ambiguous examples by margin dynamics.",
+      "questions": [
+        "Which labels should I audit first?",
+        "Which examples have persistently poor margins?"
+      ],
+      "keywords": [
+        "mislabeled",
+        "mislabelled",
+        "bad label",
+        "label noise",
+        "aum",
+        "margin",
+        "data cleaning"
+      ],
+      "frameworks": [
+        "pytorch"
+      ],
+      "requires": [
+        "stable example IDs",
+        "classification logits",
+        "labels"
+      ],
+      "call_timing": "Update during classification training.",
+      "limitations": [
+        "Low AUM is a review priority, not proof of label error.",
+        "Threshold calibration is dataset-dependent."
+      ],
+      "docs": "docs/problems/find-bad-labels.md",
+      "citation": "Pleiss et al. (2020), Identifying Mislabeled Data using AUM."
+    },
+    {
+      "id": "el2n",
+      "name": "EL2N Tracker",
+      "import_path": "traintools.EL2NTracker",
+      "summary": "Estimate early example difficulty and data-pruning priority.",
+      "questions": [
+        "Which examples matter most early in training?",
+        "Which examples might be safe pruning candidates?"
+      ],
+      "keywords": [
+        "el2n",
+        "prune",
+        "pruning",
+        "important example",
+        "data diet",
+        "difficulty",
+        "coreset"
+      ],
+      "frameworks": [
+        "pytorch"
+      ],
+      "requires": [
+        "classification logits",
+        "labels"
+      ],
+      "call_timing": "Measure early in training.",
+      "limitations": [
+        "Low-scoring examples are candidates, not automatically safe deletions.",
+        "Scores change with model and training stage."
+      ],
+      "docs": "docs/problems/find-bad-labels.md",
+      "citation": "Paul et al. (2021), Deep Learning on a Data Diet."
+    },
+    {
+      "id": "gradient-confusion",
+      "name": "Gradient Confusion Monitor",
+      "import_path": "traintools.GradientConfusionMonitor",
+      "summary": "Measure whether micro-batch gradients align or conflict.",
+      "questions": [
+        "Are examples or micro-batches fighting each other?",
+        "Why is SGD progress noisy or slow?"
+      ],
+      "keywords": [
+        "gradient conflict",
+        "gradient confusion",
+        "micro batch",
+        "cosine",
+        "negative gradient",
+        "slow sgd",
+        "curriculum"
+      ],
+      "frameworks": [
+        "pytorch"
+      ],
+      "requires": [
+        "model",
+        "loss function",
+        "splittable batch"
+      ],
+      "call_timing": "Periodically on a representative batch.",
+      "limitations": [
+        "Requires extra gradient computations.",
+        "Conflict is descriptive and may be expected in diverse data."
+      ],
+      "docs": "docs/problems/debug-gradients.md",
+      "citation": "Sankararaman et al. (2019), Gradient Confusion."
+    },
+    {
+      "id": "neural-collapse",
+      "name": "Neural Collapse Monitor",
+      "import_path": "traintools.NeuralCollapseMonitor",
+      "summary": "Measure NC1/NC2/NC3 and nearest-class-center geometry.",
+      "questions": [
+        "Has late-stage classifier geometry entered neural collapse?",
+        "Are class features and classifier weights aligning?"
+      ],
+      "keywords": [
+        "neural collapse",
+        "nc1",
+        "nc2",
+        "nc3",
+        "class means",
+        "simplex etf",
+        "feature geometry"
+      ],
+      "frameworks": [
+        "pytorch"
+      ],
+      "requires": [
+        "features",
+        "labels",
+        "optional classifier weights"
+      ],
+      "call_timing": "At checkpoints, usually in later-stage classification training.",
+      "limitations": [
+        "Neural collapse is not a universal quality or generalization score.",
+        "Requires a classification representation and enough samples per class."
+      ],
+      "docs": "docs/problems/diagnose-plateau.md",
+      "citation": "Papyan, Han, and Donoho (2020)."
+    }
+  ]
+}

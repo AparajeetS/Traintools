@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0 - 2026-07-16
+
+- Add a machine-readable capability registry and symptom-based recommender.
+- Add the `traintools` discovery and integration CLI with JSON output.
+- Add stable JSON report envelopes and schemas.
+- Add `AGENTS.md`, `llms.txt`, problem-oriented guides, and agent examples.
+- Add an optional local MCP server using the official Python MCP SDK.
+- Add an organic-adoption and evidence plan without manufactured engagement.
+
 ## 0.5.1 - 2026-06-28
 
 - Fix the primary README install command to use `pip install traintools`.

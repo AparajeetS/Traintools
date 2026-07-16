@@ -1,0 +1,67 @@
+name: Diagnostic result or failure
+description: Share a real TrainTools run, unexpected result, or false alarm.
+title: "[diagnostic] "
+labels:
+  - diagnostic-report
+body:
+  - type: dropdown
+    id: diagnostic
+    attributes:
+      label: Diagnostic
+      options:
+        - gradient-noise-scale
+        - gradient-health
+        - batch-inspector
+        - train-guard
+        - plasticity
+        - example-dynamics
+        - aum
+        - el2n
+        - gradient-confusion
+        - neural-collapse
+        - agent CLI or MCP server
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: TrainTools, Python, PyTorch, and framework versions.
+      placeholder: traintools 0.6.0, Python 3.11, torch 2.4
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Training problem
+      description: What symptom or decision led you to use the diagnostic?
+    validations:
+      required: true
+  - type: textarea
+    id: integration
+    attributes:
+      label: Minimal integration
+      description: Include the smallest relevant code snippet.
+      render: python
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: Structured report
+      description: Paste JSON from write_json_report when possible. Remove private data.
+      render: json
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What happened?
+      description: Did the signal change a training decision? Was it useful or a false alarm?
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I removed secrets, private datasets, and personally identifying information.
+          required: true

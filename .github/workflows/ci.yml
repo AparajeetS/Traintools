@@ -34,6 +34,12 @@ jobs:
       - name: Run tests
         run: pytest tests/ -v --tb=short
 
+      - name: Smoke agent CLI
+        run: |
+          traintools list --json
+          traintools recommend "gradients explode" --json
+          traintools integration train-guard --framework huggingface
+
   build:
     name: Build distribution
     runs-on: ubuntu-latest
@@ -58,6 +64,27 @@ jobs:
         with:
           name: dist
           path: dist/
+
+  mcp-smoke:
+    name: MCP smoke
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install MCP integration
+        run: |
+          pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install ".[mcp,dev]"
+
+      - name: Verify MCP tools
+        run: pytest tests/test_agent_interface.py -v --tb=short
 
   publish:
     name: Publish to PyPI

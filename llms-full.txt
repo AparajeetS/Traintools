@@ -1,0 +1,41 @@
+# TrainTools Full Agent Reference
+
+TrainTools is a small PyTorch library for instrumenting live training runs. Its
+diagnostics are paper-backed where applicable, but operational thresholds remain
+heuristics. Recommend a tool only for a declared symptom.
+
+## Commands
+
+```bash
+traintools list --json
+traintools recommend "my loss became NaN after step 400" --framework pytorch --json
+traintools explain gradient-health --json
+traintools integration train-guard --framework huggingface --json
+```
+
+The recommender uses a transparent symptom vocabulary and can abstain. It is not
+an LLM and does not inspect a user's run.
+
+## Diagnostic IDs
+
+- `gradient-noise-scale`: critical batch size and batch efficiency.
+- `gradient-health`: finite gradients, norms, clipping, update-to-weight ratio.
+- `batch-inspector`: tensors, scales, labels, imbalance, NaN and inf checks.
+- `train-guard`: validation-loss extrapolation and stop/continue advice.
+- `plasticity`: dormant units and activation effective rank.
+- `example-dynamics`: forgetting, confidence, variability, ambiguity.
+- `aum`: margin-dynamics ranking for label review.
+- `el2n`: early example difficulty and pruning priority.
+- `gradient-confusion`: micro-batch gradient alignment and conflict.
+- `neural-collapse`: NC1, NC2, NC3, and nearest-class-center geometry.
+
+## Safe Interpretation
+
+- A warning is evidence to inspect, not an automatic intervention.
+- A low-AUM example is not necessarily mislabeled.
+- A high EL2N example is not necessarily harmful.
+- A large GNS suggests batch-size inefficiency, not a guaranteed speedup.
+- A TrainGuard stop signal assumes validation history remains in the same regime.
+- Neural collapse and plasticity do not rank model quality universally.
+
+See `AGENTS.md`, `README.md`, and `docs/problems/`.

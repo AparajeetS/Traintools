@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AparajeetS/Traintools/schemas/recommendation.schema.json",
+  "title": "TrainTools diagnostic recommendation",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "package",
+    "package_version",
+    "problem",
+    "recommendations",
+    "abstained"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "package": {
+      "const": "traintools"
+    },
+    "package_version": {
+      "type": "string"
+    },
+    "problem": {
+      "type": "string"
+    },
+    "framework": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "summary",
+          "limitations",
+          "score"
+        ]
+      }
+    },
+    "abstained": {
+      "type": "boolean"
+    },
+    "abstention_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  }
+}
