@@ -27,3 +27,9 @@ python benchmarks/ptdb_v1/kaggle/pilot/validate_pilot.py PATH_TO_OUTPUT
 
 The full benchmark is launched only after the pilot establishes a quota-safe
 shard plan. Every full shard uses the same run and artifact schemas.
+
+## Pilot Of Record
+
+Kaggle version 5 completed on a Tesla T4 on 2026-07-18. The downloaded immutable
+artifacts and checksum validation are in `results/timing_pilot_v5/`; the concise
+interpretation is in `results/TIMING_PILOT.md`.

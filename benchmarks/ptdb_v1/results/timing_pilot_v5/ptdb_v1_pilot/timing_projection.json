@@ -1,0 +1,10 @@
+{
+  "pilot_complete_runs": 12,
+  "pilot_errors": 0,
+  "instrumented_seconds_per_epoch_mean": 62.77730390550002,
+  "instrumented_seconds_per_epoch_max": 91.562392226,
+  "projected_81_run_core_gpu_hours": 35.31223344684376,
+  "projection_is_timing_only": true,
+  "exact_hash_pairs": 6,
+  "paired_cells": 6
+}

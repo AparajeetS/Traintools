@@ -73,3 +73,10 @@ with the worker. Local execution continues to use the repository-ignored `data/`
 directory.
 
 No outcome data were produced, and no benchmark setting or success gate changed.
+
+## Timing pilot version 5, 2026-07-18
+
+Version 5 completed on one Tesla T4. The frozen validator accepted all 12
+executions and all six plain/instrumented pairs with no error rows. All six pairs
+had exact final parameter hashes and zero test-accuracy difference. This version
+is the timing pilot of record; its metric values remain non-confirmatory.

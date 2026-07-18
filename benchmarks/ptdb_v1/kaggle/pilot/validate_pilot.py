@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -11,6 +12,14 @@ from pathlib import Path
 def read_csv(path: Path):
     with path.open(newline="", encoding="utf-8") as handle:
         return list(csv.DictReader(handle))
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def main(root: str) -> None:
@@ -33,6 +42,11 @@ def main(root: str) -> None:
     pairs = read_csv(output / "paired_noninterference.csv")
     projection = json.loads((output / "timing_projection.json").read_text(encoding="utf-8"))
     manifest = json.loads((output / "manifest.json").read_text(encoding="utf-8"))
+    declared_hashes = manifest.get("outputs", {})
+    hashes_match = bool(declared_hashes) and all(
+        (output / name).is_file() and sha256_file(output / name) == expected
+        for name, expected in declared_hashes.items()
+    )
 
     checks = {
         "no_error_rows": len(errors) == 0,
@@ -44,6 +58,7 @@ def main(root: str) -> None:
         "gpu_recorded": bool(manifest["environment"].get("gpu")),
         "package_is_0_6_2": manifest["environment"].get("traintools") == "0.6.2",
         "projection_present": projection.get("projected_81_run_core_gpu_hours") is not None,
+        "output_hashes_match": hashes_match,
     }
     report = {
         "valid_timing_pilot": all(checks.values()),
@@ -64,4 +79,3 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         raise SystemExit("usage: validate_pilot.py OUTPUT_DIRECTORY")
     main(sys.argv[1])
-

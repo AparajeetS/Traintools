@@ -1,0 +1,80 @@
+{
+  "protocol": "PTDB-1",
+  "phase": "timing_pilot",
+  "confirmatory": false,
+  "pilot_outputs_may_tune_thresholds": false,
+  "protocol_sha256": "5b01d1ca47b6ebca6601a9debc80b0edfb262c3ee6feeb8e0cc998b0ee92821e",
+  "protocol_repository_path": "benchmarks/ptdb_v1/PROTOCOL.md",
+  "config_sha256": "95ed058dac307e16d3bf213580b405c9a334e02fcd07d50b9376b1bbd20896de",
+  "script_sha256": "a4da4ed0a9dcefedc4631814893fe939d9c40aae976c97bf5232ad293417579b",
+  "started_at_unix": 1784368599.9302893,
+  "environment": {
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu128",
+    "torchvision": "0.25.0+cu128",
+    "traintools": "0.6.2",
+    "cuda": "12.8",
+    "gpu": "Tesla T4",
+    "cuda_preflight": {
+      "available": true,
+      "torch": "2.10.0+cu128",
+      "torch_cuda": "12.8",
+      "device": "Tesla T4",
+      "capability": [
+        7,
+        5
+      ]
+    },
+    "traintools_install": "pip --no-deps (preserve platform torch)"
+  },
+  "config": {
+    "protocol": "PTDB-1",
+    "phase": "timing_pilot",
+    "public_package": "traintools==0.6.2",
+    "epochs": 3,
+    "batch_size": 128,
+    "num_workers": 2,
+    "amp": true,
+    "download": true,
+    "output_dir": "/kaggle/working/ptdb_v1_pilot",
+    "cells": [
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 11,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "vit_tiny",
+        "seed": 11,
+        "regime": "symmetric"
+      },
+      {
+        "dataset": "cifar100",
+        "model": "wrn28_2",
+        "seed": 23,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar100",
+        "model": "resnet18",
+        "seed": 23,
+        "regime": "class_conditional"
+      },
+      {
+        "dataset": "svhn",
+        "model": "wrn28_2",
+        "seed": 37,
+        "regime": "clean"
+      },
+      {
+        "dataset": "svhn",
+        "model": "vit_tiny",
+        "seed": 37,
+        "regime": "symmetric"
+      }
+    ]
+  }
+}

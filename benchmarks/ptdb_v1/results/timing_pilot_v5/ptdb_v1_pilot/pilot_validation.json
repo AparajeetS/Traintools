@@ -1,0 +1,20 @@
+{
+  "valid_timing_pilot": true,
+  "checks": {
+    "no_error_rows": true,
+    "twelve_completed_runs": true,
+    "six_completed_pairs": true,
+    "six_instrumented_runs": true,
+    "six_plain_runs": true,
+    "all_cells_have_three_epochs": true,
+    "gpu_recorded": true,
+    "package_is_0_6_2": true,
+    "projection_present": true,
+    "output_hashes_match": true
+  },
+  "exact_hash_pairs": 6,
+  "max_abs_accuracy_difference": 0.0,
+  "median_runtime_ratio": 2.910763775762217,
+  "projected_81_run_core_gpu_hours": 35.31223344684376,
+  "interpretation_boundary": "Timing and implementation only; diagnostic thresholds remain frozen."
+}

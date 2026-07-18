@@ -1,0 +1,7 @@
+accuracy_difference,cell,exact_final_hash,loss_difference,runtime_ratio
+0.0,cifar10__resnet18__11__clean,1,0.0,2.498587630263776
+0.0,cifar10__vit_tiny__11__symmetric,1,0.0,2.8279327493572617
+0.0,cifar100__wrn28_2__23__clean,1,0.0,2.910763775762217
+0.0,cifar100__resnet18__23__class_conditional,1,0.0,2.445527458544376
+0.0,svhn__wrn28_2__37__clean,1,0.0,3.9114859292693573
+0.0,svhn__vit_tiny__37__symmetric,1,0.0,3.75484874713727
