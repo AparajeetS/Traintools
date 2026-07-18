@@ -1,0 +1,21 @@
+[{"stream_name":"stdout","time":3.859574814,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 55.0/55.0 kB 2.5 MB/s eta 0:00:00\n"}
+,{"stream_name":"stderr","time":17.88551024,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":17.885545114,"data":"  File \"/kaggle/src/script.py\", line 644, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":17.885702101,"data":"    main()\n"}
+,{"stream_name":"stderr","time":17.885720744,"data":"  File \"/kaggle/src/script.py\", line 549, in main\n"}
+,{"stream_name":"stderr","time":17.886017844,"data":"    config = json.loads(CONFIG_PATH.read_text(encoding=\"utf-8\"))\n"}
+,{"stream_name":"stderr","time":17.886091001,"data":"                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":17.886121713,"data":"  File \"/usr/lib/python3.12/pathlib.py\", line 1027, in read_text\n"}
+,{"stream_name":"stderr","time":17.887573872,"data":"    with self.open(mode='r', encoding=encoding, errors=errors) as f:\n"}
+,{"stream_name":"stderr","time":17.887671031,"data":"         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":17.887705421,"data":"  File \"/usr/lib/python3.12/pathlib.py\", line 1013, in open\n"}
+,{"stream_name":"stderr","time":17.88810025,"data":"    return io.open(self, mode, buffering, encoding, errors, newline)\n"}
+,{"stream_name":"stderr","time":17.888177599,"data":"           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":17.888229885,"data":"FileNotFoundError: [Errno 2] No such file or directory: '/kaggle/src/benchmark_config.json'\n"}
+,{"stream_name":"stderr","time":21.743909082000002,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":21.743933352,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":21.967712859,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":21.967765961,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":22.554433707,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":23.832156837,"data":"[NbConvertApp] Writing 436448 bytes to __results__.html\n"}
+]

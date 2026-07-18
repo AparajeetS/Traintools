@@ -1,0 +1,20 @@
+{
+  "protocol": "PTDB-1",
+  "phase": "timing_pilot",
+  "public_package": "traintools==0.6.2",
+  "epochs": 3,
+  "batch_size": 128,
+  "num_workers": 2,
+  "amp": true,
+  "download": true,
+  "output_dir": "/kaggle/working/ptdb_v1_pilot",
+  "cells": [
+    {"dataset": "cifar10", "model": "resnet18", "seed": 11, "regime": "clean"},
+    {"dataset": "cifar10", "model": "vit_tiny", "seed": 11, "regime": "symmetric"},
+    {"dataset": "cifar100", "model": "wrn28_2", "seed": 23, "regime": "clean"},
+    {"dataset": "cifar100", "model": "resnet18", "seed": 23, "regime": "class_conditional"},
+    {"dataset": "svhn", "model": "wrn28_2", "seed": 37, "regime": "clean"},
+    {"dataset": "svhn", "model": "vit_tiny", "seed": 37, "regime": "symmetric"}
+  ]
+}
+
