@@ -22,7 +22,7 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def main(root_value: str, dataset: str) -> None:
+def main(root_value: str, dataset: str, model: str | None = None) -> None:
     root = Path(root_value)
     required = (
         "manifest.json",
@@ -42,16 +42,21 @@ def main(root_value: str, dataset: str) -> None:
     epochs = read_csv(root / "epoch_metrics.csv")
     pairs = read_csv(root / "paired_noninterference.csv")
     declared_hashes = manifest.get("outputs", {})
+    expected_instrumented = 27 if model is None else 9
+    expected_plain = 6 if model is None else (3 if model in {"resnet18", "wrn28_2"} else 0)
+    expected_pairs = expected_plain
+    expected_executions = expected_instrumented + expected_plain
     checks = {
         "no_error_rows": not errors,
-        "thirty_three_completed_executions": len(runs) == 33,
-        "twenty_seven_instrumented_runs": sum(int(row["instrumented"]) for row in runs) == 27,
-        "six_plain_twins": sum(1 - int(row["instrumented"]) for row in runs) == 6,
-        "six_completed_pairs": len(pairs) == 6,
+        "expected_completed_executions": len(runs) == expected_executions,
+        "expected_instrumented_runs": sum(int(row["instrumented"]) for row in runs) == expected_instrumented,
+        "expected_plain_twins": sum(1 - int(row["instrumented"]) for row in runs) == expected_plain,
+        "expected_completed_pairs": len(pairs) == expected_pairs,
         "all_pairs_exact": all(int(row["exact_final_hash"]) for row in pairs),
         "all_runs_are_declared_dataset": {row["dataset"] for row in runs} == {dataset},
+        "all_runs_are_declared_model": model is None or {row["model"] for row in runs} == {model},
         "all_runs_have_25_epochs": all(int(row["epochs"]) == 25 for row in runs),
-        "all_epoch_rows_present": len(epochs) == 33 * 25,
+        "all_epoch_rows_present": len(epochs) == expected_executions * 25,
         "public_package_is_0_6_2": manifest["environment"].get("traintools") == "0.6.2",
         "t4_recorded": "T4" in str(manifest["environment"].get("gpu")),
         "output_hashes_match": bool(declared_hashes) and all(
@@ -62,6 +67,7 @@ def main(root_value: str, dataset: str) -> None:
     report = {
         "valid_base_shard": all(checks.values()),
         "dataset": dataset,
+        "model": model,
         "checks": checks,
         "completed_executions": len(runs),
         "exact_hash_pairs": sum(int(row["exact_final_hash"]) for row in pairs),
@@ -77,6 +83,6 @@ def main(root_value: str, dataset: str) -> None:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        raise SystemExit("usage: validate_shard.py OUTPUT_DIRECTORY DATASET")
-    main(sys.argv[1], sys.argv[2])
+    if len(sys.argv) not in {3, 4}:
+        raise SystemExit("usage: validate_shard.py OUTPUT_DIRECTORY DATASET [MODEL]")
+    main(sys.argv[1], sys.argv[2], sys.argv[3] if len(sys.argv) == 4 else None)

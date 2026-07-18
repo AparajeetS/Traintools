@@ -13,4 +13,10 @@ After download, validate dataset shards with:
 python benchmarks/ptdb_v1/kaggle/full/validate_shard.py OUTPUT_DIRECTORY cifar10
 ```
 
+Architecture-specific SVHN shards include the model argument, for example:
+
+```powershell
+python benchmarks/ptdb_v1/kaggle/full/validate_shard.py OUTPUT_DIRECTORY svhn resnet18
+```
+
 The protected holdout is not implemented or mounted in these kernels.
