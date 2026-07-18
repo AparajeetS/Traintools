@@ -59,3 +59,17 @@ preflight remains mandatory and the public package remains installed with
 `--no-deps`.
 
 No outcome data were produced, and no benchmark setting or success gate changed.
+
+## Timing pilot version 4, 2026-07-18
+
+The explicit T4 request was honored and the CUDA preflight passed. Training did
+not begin because this Kaggle script environment had no `/kaggle/temp` directory;
+the cache-path fallback consequently resolved to the read-only `/kaggle/src/data`.
+All 12 executions stopped while creating that directory.
+
+Correction: use `/tmp/ptdb_data`, the container's writable ephemeral filesystem,
+whenever `/kaggle` is present. This cache is not a notebook output and is discarded
+with the worker. Local execution continues to use the repository-ignored `data/`
+directory.
+
+No outcome data were produced, and no benchmark setting or success gate changed.

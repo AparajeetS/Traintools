@@ -479,7 +479,7 @@ def run_cell(cell: dict[str, Any], config: dict[str, Any], instrumented: bool, s
     run_id = f"{config['phase']}__{dataset_name}__{model_name}__s{seed}__{regime}__{mode}"
     seed_everything(seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_root = Path("/kaggle/temp/ptdb_data" if Path("/kaggle/temp").exists() else HERE / "data")
+    data_root = Path("/tmp/ptdb_data") if Path("/kaggle").exists() else HERE / "data"
     data_root.mkdir(parents=True, exist_ok=True)
     train_set, val_set, test_set, n_classes = make_datasets(dataset_name, regime, seed, data_root, smoke)
     workers = 0 if smoke else int(config["num_workers"])
