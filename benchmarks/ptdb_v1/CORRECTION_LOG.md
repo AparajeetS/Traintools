@@ -19,3 +19,26 @@ environment-setup time.
 The Kaggle-created slug normalized `PTDB-1` to `phason-ptdb-1-timing-pilot`.
 The local metadata ID was updated to that existing slug after the first update
 request returned HTTP 409; this changes no executable or research setting.
+
+## Timing pilot version 2, 2026-07-18
+
+Kaggle allocated a Tesla P100 (compute capability 6.0). The dependency resolver
+for `pip install traintools==0.6.2` replaced Kaggle's preinstalled PyTorch with a
+build supporting compute capability 7.0 and newer. All 12 executions therefore
+failed while moving the model to CUDA with `no kernel image is available for
+execution on the device`; no epoch began and no outcome data were produced.
+
+Correction: install the same public TrainTools release with `--no-deps`, thereby
+preserving Kaggle's platform-compatible PyTorch build, and run a real CUDA tensor
+operation before dataset setup so an incompatible environment fails immediately.
+
+Version 2 also showed that downloading the official archives during the run was
+too slow for a useful timing pilot and caused dataset caches to be captured as
+notebook output. The exact native dataset formats are now attached from public
+Kaggle mirrors and staged under `/kaggle/temp`; torchvision's built-in integrity
+checks still validate the expected files. Network download remains a fallback
+outside Kaggle. Temporary data are excluded from notebook output.
+
+No dataset identity, split, transform, model, seed, intervention, epoch budget,
+comparator, threshold, or success gate changed. These infrastructure corrections
+were recorded before version 3 was submitted.

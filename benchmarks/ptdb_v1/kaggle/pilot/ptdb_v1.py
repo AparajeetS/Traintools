@@ -10,6 +10,7 @@ import math
 import os
 import platform
 import random
+import shutil
 import subprocess
 import sys
 import time
@@ -56,7 +57,7 @@ def ensure_public_dependencies() -> None:
     except Exception:
         pass
     subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "-q", "traintools==0.6.2"]
+        [sys.executable, "-m", "pip", "install", "-q", "--no-deps", "traintools==0.6.2"]
     )
 
 
@@ -81,6 +82,29 @@ FROZEN_SPLIT_SEED = 20260718
 NOISE_RATE = 0.20
 FULL_DEVELOPMENT_RUNS = 81
 FULL_EPOCHS = 25
+
+
+def cuda_preflight(required: bool) -> dict[str, Any]:
+    info = {
+        "available": torch.cuda.is_available(),
+        "torch": torch.__version__,
+        "torch_cuda": torch.version.cuda,
+        "device": None,
+        "capability": None,
+    }
+    if not torch.cuda.is_available():
+        if required:
+            raise RuntimeError(f"PTDB-1 requires a working CUDA device; environment={info}")
+        return info
+    info["device"] = torch.cuda.get_device_name(0)
+    info["capability"] = list(torch.cuda.get_device_capability(0))
+    try:
+        probe = torch.ones(16, device="cuda")
+        float(probe.square().sum().item())
+        torch.cuda.synchronize()
+    except Exception as exc:
+        raise RuntimeError(f"CUDA preflight failed before dataset setup; environment={info}") from exc
+    return info
 
 
 def canonical_json(value: Any) -> str:
@@ -219,11 +243,41 @@ def dataset_spec(name: str) -> tuple[tuple[float, ...], tuple[float, ...], int]:
     return specs[name]
 
 
+def stage_kaggle_dataset(name: str, data_root: Path) -> bool:
+    input_root = Path("/kaggle/input")
+    if not input_root.is_dir():
+        return False
+    if name == "cifar10":
+        source = input_root / "cifar10-python" / "cifar-10-batches-py"
+        target = data_root / "cifar-10-batches-py"
+        if source.is_dir():
+            shutil.copytree(source, target, dirs_exist_ok=True)
+            return True
+    elif name == "cifar100":
+        source = input_root / "cifar100"
+        target = data_root / "cifar-100-python"
+        required = ("meta", "train", "test")
+        if all((source / filename).is_file() for filename in required):
+            target.mkdir(parents=True, exist_ok=True)
+            for filename in required:
+                shutil.copy2(source / filename, target / filename)
+            return True
+    elif name == "svhn":
+        source = input_root / "street-view-house-numbers-images"
+        required = ("train_32x32.mat", "test_32x32.mat")
+        if all((source / filename).is_file() for filename in required):
+            for filename in required:
+                shutil.copy2(source / filename, data_root / filename)
+            return True
+    return False
+
+
 def make_datasets(name: str, regime: str, seed: int, data_root: Path, smoke: bool):
     if smoke:
         return SmokeDataset(192, 10, seed), SmokeDataset(96, 10, seed + 1), SmokeDataset(96, 10, seed + 2), 10
 
     mean, std, n_classes = dataset_spec(name)
+    staged = stage_kaggle_dataset(name, data_root)
     train_ops = [transforms.RandomCrop(32, padding=4)]
     if name != "svhn":
         train_ops.append(transforms.RandomHorizontalFlip())
@@ -233,14 +287,14 @@ def make_datasets(name: str, regime: str, seed: int, data_root: Path, smoke: boo
 
     if name.startswith("cifar"):
         cls = datasets.CIFAR10 if name == "cifar10" else datasets.CIFAR100
-        train_base = cls(data_root, train=True, transform=train_transform, download=True)
-        eval_base = cls(data_root, train=True, transform=eval_transform, download=True)
-        test_base = cls(data_root, train=False, transform=eval_transform, download=True)
+        train_base = cls(data_root, train=True, transform=train_transform, download=not staged)
+        eval_base = cls(data_root, train=True, transform=eval_transform, download=not staged)
+        test_base = cls(data_root, train=False, transform=eval_transform, download=not staged)
         labels = [int(v) for v in train_base.targets]
     elif name == "svhn":
-        train_base = datasets.SVHN(data_root, split="train", transform=train_transform, download=True)
-        eval_base = datasets.SVHN(data_root, split="train", transform=eval_transform, download=True)
-        test_base = datasets.SVHN(data_root, split="test", transform=eval_transform, download=True)
+        train_base = datasets.SVHN(data_root, split="train", transform=train_transform, download=not staged)
+        eval_base = datasets.SVHN(data_root, split="train", transform=eval_transform, download=not staged)
+        test_base = datasets.SVHN(data_root, split="test", transform=eval_transform, download=not staged)
         labels = [int(v) for v in train_base.labels]
     else:
         raise ValueError(name)
@@ -425,7 +479,7 @@ def run_cell(cell: dict[str, Any], config: dict[str, Any], instrumented: bool, s
     run_id = f"{config['phase']}__{dataset_name}__{model_name}__s{seed}__{regime}__{mode}"
     seed_everything(seed)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    data_root = Path("/kaggle/working/data" if Path("/kaggle/working").exists() else HERE / "data")
+    data_root = Path("/kaggle/temp/ptdb_data" if Path("/kaggle/temp").exists() else HERE / "data")
     data_root.mkdir(parents=True, exist_ok=True)
     train_set, val_set, test_set, n_classes = make_datasets(dataset_name, regime, seed, data_root, smoke)
     workers = 0 if smoke else int(config["num_workers"])
@@ -579,6 +633,7 @@ def main() -> None:
     smoke = os.environ.get("PTDB_SMOKE") == "1"
     output = Path(config["output_dir"] if not smoke else HERE / "smoke_output")
     output.mkdir(parents=True, exist_ok=True)
+    preflight = cuda_preflight(required=not smoke)
     manifest = {
         "protocol": config["protocol"],
         "phase": config["phase"],
@@ -597,6 +652,8 @@ def main() -> None:
             "traintools": getattr(traintools, "__version__", "unknown"),
             "cuda": torch.version.cuda,
             "gpu": torch.cuda.get_device_name(0) if torch.cuda.is_available() else None,
+            "cuda_preflight": preflight,
+            "traintools_install": "pip --no-deps (preserve platform torch)",
         },
         "config": config,
     }

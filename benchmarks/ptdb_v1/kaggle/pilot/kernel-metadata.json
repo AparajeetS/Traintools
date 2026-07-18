@@ -9,7 +9,11 @@
   "enable_tpu": "false",
   "enable_internet": "true",
   "machine_shape": "",
-  "dataset_sources": [],
+  "dataset_sources": [
+    "pankrzysiu/cifar10-python",
+    "fedesoriano/cifar100",
+    "sahityasetu/street-view-house-numbers-images"
+  ],
   "competition_sources": [],
   "kernel_sources": [],
   "model_sources": []
