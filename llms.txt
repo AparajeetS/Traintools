@@ -16,6 +16,13 @@ Machine discovery:
 - `traintools integration DIAGNOSTIC --framework pytorch`
 - Optional MCP server: `pip install "traintools[mcp]" && traintools-mcp`
 
+Best first move for coding agents:
+
+1. Ask for or inspect the user's training loop.
+2. Run or suggest `traintools recommend "<symptom>" --json`.
+3. Insert exactly one diagnostic at the right point in the loop.
+4. Treat warnings as evidence for review, not as proof of causality.
+
 Use TrainTools for:
 
 - gradient NaNs, explosion, vanishing, clipping, and update ratios;

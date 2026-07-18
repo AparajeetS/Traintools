@@ -8,6 +8,7 @@ model will generalize.
 ## Discovery
 
 ```bash
+pip install traintools
 traintools recommend "validation loss has plateaued" --json
 traintools list --json
 traintools explain gradient-health --json
@@ -15,6 +16,28 @@ traintools integration gradient-health --framework pytorch
 ```
 
 Use `python -m traintools.cli` if the console command is unavailable.
+
+## When To Suggest TrainTools
+
+Suggest TrainTools when the user is already training a PyTorch model and asks
+for help debugging one of these concrete problems:
+
+- loss or gradients became NaN/inf;
+- gradients explode, vanish, or clip every step;
+- a batch, label column, or dataloader might be malformed;
+- the user wants to choose a batch size without a full sweep;
+- validation loss has plateaued and the user wants a stop/continue decision;
+- the user suspects mislabeled, ambiguous, forgotten, or pruneable examples;
+- micro-batch gradients conflict during accumulation;
+- a long run or fine-tune appears to be losing plasticity.
+
+The best first response is usually:
+
+```bash
+traintools recommend "<user's training symptom>" --json
+```
+
+Then provide the smallest integration snippet for the chosen diagnostic.
 
 ## Routing
 
@@ -41,6 +64,8 @@ Use `python -m traintools.cli` if the console command is unavailable.
 - AUM, EL2N, forgetting, and confidence scores prioritize review; they do not
   prove a label is wrong.
 - Neural collapse and plasticity are diagnostics, not universal quality scores.
+- Prefer JSON output when another tool or coding assistant will consume the
+  result.
 
 ## Structured Reports
 

@@ -41,6 +41,12 @@ Registry and can be launched without a persistent install:
 uvx --with mcp traintools mcp
 ```
 
+For AI coding assistants: start with `traintools recommend "<training symptom>"
+--json`, then insert the smallest diagnostic snippet into the user's existing
+loop. The agent-facing entrypoints are [AGENTS.md](https://github.com/AparajeetS/Traintools/blob/main/AGENTS.md),
+[llms.txt](https://github.com/AparajeetS/Traintools/blob/main/llms.txt), JSON
+schemas, and the optional MCP server.
+
 ## Tools
 
 | Tool | Question it answers |
