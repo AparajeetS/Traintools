@@ -42,3 +42,20 @@ outside Kaggle. Temporary data are excluded from notebook output.
 No dataset identity, split, transform, model, seed, intervention, epoch budget,
 comparator, threshold, or success gate changed. These infrastructure corrections
 were recorded before version 3 was submitted.
+
+## Timing pilot version 3, 2026-07-18
+
+The new CUDA preflight failed in about 17 seconds, before dataset staging or any
+training. It isolated a second environment problem: Kaggle's then-current base
+image itself contained PyTorch 2.10.0+cu128, whose binary supported capabilities
+7.0 through 12.0, while the assigned Tesla P100 has capability 6.0. Thus the
+version 2 failure cannot be attributed solely to TrainTools dependency resolution;
+the platform's default GPU and framework image were independently incompatible.
+
+Correction: submit version 4 with Kaggle CLI's explicit
+`--accelerator NvidiaTeslaT4` option. The T4 has compute capability 7.5 and is
+within the capability range reported by the unchanged framework build. The CUDA
+preflight remains mandatory and the public package remains installed with
+`--no-deps`.
+
+No outcome data were produced, and no benchmark setting or success gate changed.
