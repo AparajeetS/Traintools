@@ -247,30 +247,33 @@ def stage_kaggle_dataset(name: str, data_root: Path) -> bool:
     if not input_root.is_dir():
         return False
     if name == "cifar10":
-        source = input_root / "cifar10-python" / "cifar-10-batches-py"
+        source = next((path for path in input_root.rglob("cifar-10-batches-py") if path.is_dir()), None)
         target = data_root / "cifar-10-batches-py"
         if (target / "data_batch_1").is_file() and (target / "test_batch").is_file():
             return True
-        if source.is_dir():
+        if source is not None:
             shutil.copytree(source, target, dirs_exist_ok=True)
             return True
     elif name == "cifar100":
-        source = input_root / "cifar100"
         target = data_root / "cifar-100-python"
         required = ("meta", "train", "test")
         if all((target / filename).is_file() for filename in required):
             return True
-        if all((source / filename).is_file() for filename in required):
+        source = next(
+            (path.parent for path in input_root.rglob("meta") if all((path.parent / filename).is_file() for filename in required)),
+            None,
+        )
+        if source is not None:
             target.mkdir(parents=True, exist_ok=True)
             for filename in required:
                 shutil.copy2(source / filename, target / filename)
             return True
     elif name == "svhn":
-        source = input_root / "street-view-house-numbers-images"
         required = ("train_32x32.mat", "test_32x32.mat")
         if all((data_root / filename).is_file() for filename in required):
             return True
-        if all((source / filename).is_file() for filename in required):
+        source = next((path.parent for path in input_root.rglob("train_32x32.mat") if (path.parent / "test_32x32.mat").is_file()), None)
+        if source is not None:
             for filename in required:
                 shutil.copy2(source / filename, data_root / filename)
             return True

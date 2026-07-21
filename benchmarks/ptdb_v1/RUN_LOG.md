@@ -14,3 +14,15 @@
 The Kaggle-created slug inserted a hyphen in `cifar-10`; the local metadata ID
 was corrected after version 1 started. This pointer correction changes no code,
 configuration, dataset, model, seed, regime, threshold, or success gate.
+
+### Completion status, checked 2026-07-22
+
+- Kaggle status: `CANCEL_ACKNOWLEDGED` after the 12-hour runtime ceiling.
+- Published output files: none.
+- Log progress: 29 executions completed; execution 30 began but did not finish.
+- Scientific rows admitted to analysis: zero.
+
+Because Kaggle does not publish `/kaggle/working` for this cancelled script, the
+partial CSV ledger is unavailable. The complete matrix must be rerun in smaller
+architecture shards. This is an infrastructure rerun under the frozen protocol,
+not a response to favorable or unfavorable metric results.

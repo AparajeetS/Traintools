@@ -1,0 +1,20 @@
+{
+  "id": "aparajeetshadangi/phason-ptdb-1-cifar-10-wrn28-2-development",
+  "title": "Phason PTDB 1 CIFAR 10 WRN28 2 Development",
+  "code_file": "ptdb_v1_full.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_tpu": "false",
+  "enable_internet": "true",
+  "machine_shape": "",
+  "dataset_sources": [
+    "pankrzysiu/cifar10-python",
+    "fedesoriano/cifar100",
+    "sahityasetu/street-view-house-numbers-images"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

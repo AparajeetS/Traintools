@@ -30,3 +30,20 @@ stages. Base-shard outcomes cannot alter their targets, comparators, or gates.
 Each shard must fit below Kaggle's 12-hour notebook limit according to pilot
 telemetry. Infrastructure failures may be rerun only after a dated correction is
 committed. Scientific failures, nulls, and sign reversals are never rerun away.
+
+## Infrastructure amendment 1, 2026-07-22
+
+The first CIFAR-10 shard reached Kaggle's 12-hour limit. Its log shows 29
+executions completed and the thirtieth began, but Kaggle published no output
+files for the cancelled script, so none of those rows can enter analysis. No
+metric outcome was available when this amendment was made.
+
+CIFAR-10 and CIFAR-100 are therefore split by architecture. CNN shards contain
+nine instrumented runs and three clean plain twins; ViT shards contain nine
+instrumented runs. Pilot and cancellation timing place each at roughly 4-5
+hours. The three existing architecture-specific SVHN shards are unchanged.
+
+Future kernels discover attached native dataset files by content under
+`/kaggle/input` instead of assuming Kaggle's mount-directory spelling. Network
+download remains a fallback. These changes affect only shard boundaries and
+dataset staging; all scientific settings and gates remain frozen.

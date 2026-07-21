@@ -1,4 +1,4 @@
-"""PTDB-1 SVHN WRN-28-2 development shard."""
+"""PTDB-1 CIFAR-100 ViT-Tiny/4 development shard."""
 
 from __future__ import annotations
 
@@ -27,17 +27,17 @@ PROTOCOL_REPOSITORY_PATH = "benchmarks/ptdb_v1/PROTOCOL.md"
 FROZEN_CONFIG = {
     "protocol": "PTDB-1",
     "phase": "development_base",
-    "shard": "svhn_wrn28_2",
+    "shard": "cifar100_vit_tiny",
     "public_package": "traintools==0.6.2",
     "epochs": 25,
     "batch_size": 128,
     "num_workers": 2,
     "amp": True,
     "download": True,
-    "output_dir": "/kaggle/working/ptdb_v1_svhn_wrn28_2",
+    "output_dir": "/kaggle/working/ptdb_v1_cifar100_vit_tiny",
     "cells": [
-        {"dataset": "svhn", "model": model, "seed": seed, "regime": regime}
-        for model in ("wrn28_2",)
+        {"dataset": "cifar100", "model": model, "seed": seed, "regime": regime}
+        for model in ("vit_tiny",)
         for seed in (11, 23, 37)
         for regime in ("clean", "symmetric", "class_conditional")
     ],
