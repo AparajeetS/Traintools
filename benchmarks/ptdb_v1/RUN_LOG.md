@@ -26,3 +26,14 @@ Because Kaggle does not publish `/kaggle/working` for this cancelled script, the
 partial CSV ledger is unavailable. The complete matrix must be rerun in smaller
 architecture shards. This is an infrastructure rerun under the frozen protocol,
 not a response to favorable or unfavorable metric results.
+
+## CIFAR-10 ResNet-18 replacement shard
+
+- Submitted: 2026-07-22 00:40:01 +05:30
+- Kaggle kernel: `aparajeetshadangi/phason-ptdb-1-cifar-10-resnet18-development`
+- Kernel version: 1
+- Source commit: `8b7ce210b4eb5a288da5042c84d910cdb143371c`
+- Requested accelerator: `NvidiaTeslaT4`
+- Submission matrix: nine instrumented runs and three clean plain twins
+- Epochs: 25 per execution
+- Status after setup window: running
