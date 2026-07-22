@@ -1,0 +1,20 @@
+{
+  "script_sha256": "caa2e2a1339dc3fbbe32386658362ebd3cad00371e5ae86f4bd52e1451bc732f",
+  "inputs": {
+    "benchmarks\\ptdb_v1\\results\\cifar10_resnet18_v1\\ptdb_v1_cifar10_resnet18\\run_summary.csv": "9215c541142e5533a5e1b3a9c1a9483af2fbf6a6d5f45df7a6eae7903bed9318",
+    "benchmarks\\ptdb_v1\\results\\cifar10_resnet18_v1\\ptdb_v1_cifar10_resnet18\\epoch_metrics.csv": "859ca0dbbc4d8fd5d3b85d12afe77001600466d3bc3b1d2803c804ce5488b503",
+    "benchmarks\\ptdb_v1\\results\\cifar10_resnet18_v1\\ptdb_v1_cifar10_resnet18\\paired_noninterference.csv": "d34cf83566fc6e386b30cd0635ac797ce3729b92d78e25d309a99cc414b41e31",
+    "benchmarks\\ptdb_v1\\results\\cifar10_resnet18_v1\\ptdb_v1_cifar10_resnet18\\errors.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "benchmarks\\ptdb_v1\\results\\cifar10_resnet18_v1\\ptdb_v1_cifar10_resnet18\\manifest.json": "2995935abf1406bdfaf7d2af99a8650b141712fb29dbab762210178ad1e5e580",
+    "benchmarks\\ptdb_v1\\results\\cifar10_wrn28_2_v1\\ptdb_v1_cifar10_wrn28_2\\run_summary.csv": "f66a566caac769151d66103ef3b8f7fa2add1e24b96bca35fe4c9e6cc7394dee",
+    "benchmarks\\ptdb_v1\\results\\cifar10_wrn28_2_v1\\ptdb_v1_cifar10_wrn28_2\\epoch_metrics.csv": "5dbcf6b9e0909b3f5d2c0add7a8128d88c5e45f507996d6116febb3a284dafcd",
+    "benchmarks\\ptdb_v1\\results\\cifar10_wrn28_2_v1\\ptdb_v1_cifar10_wrn28_2\\paired_noninterference.csv": "fae405ec585cf067b397db5937ff914d44faf32172bfaa15d0854d49f564540e",
+    "benchmarks\\ptdb_v1\\results\\cifar10_wrn28_2_v1\\ptdb_v1_cifar10_wrn28_2\\errors.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "benchmarks\\ptdb_v1\\results\\cifar10_wrn28_2_v1\\ptdb_v1_cifar10_wrn28_2\\manifest.json": "62f9fa63981d24d7efa773083d3d13a2288b279787769d7b330c53d615ee325f"
+  },
+  "outputs": {
+    "base_summary.json": "9cd235291f338fe3112baa0a9da98f5a99e31ec29a08d4d1b3c39568aa2b5699",
+    "label_noise_by_run.csv": "1c8ac70ec2bc2262d3462f4bf0a1eb323e5de6f93cbaafff66e097ad89b3b78c",
+    "trainguard_decision_targets.csv": "693dafdf1310b5a33951d636e2f880f5840e08dd067ac1470b663f930f69011a"
+  }
+}

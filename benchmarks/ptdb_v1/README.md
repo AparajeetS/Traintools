@@ -34,6 +34,8 @@ Kaggle version 5 completed on a Tesla T4 on 2026-07-18. The downloaded immutable
 artifacts and checksum validation are in `results/timing_pilot_v5/`; the concise
 interpretation is in `results/TIMING_PILOT.md`.
 
-The first validated 25-epoch development result, CIFAR-10 with ResNet-18, is
-summarized in `results/CIFAR10_RESNET18.md`. It is development evidence, not the
-protected holdout.
+The first two validated 25-epoch development shards cover CIFAR-10 with
+ResNet-18 and WRN-28-2. Their individual results are in
+`results/CIFAR10_RESNET18.md` and `results/CIFAR10_WRN28_2.md`; the frozen
+cross-architecture comparison is in `results/CIFAR10_TWO_ARCHITECTURES.md`.
+These are development results, not the protected holdout.

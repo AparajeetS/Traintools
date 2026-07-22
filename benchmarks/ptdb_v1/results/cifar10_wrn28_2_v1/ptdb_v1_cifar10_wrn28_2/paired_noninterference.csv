@@ -1,0 +1,4 @@
+accuracy_difference,cell,exact_final_hash,loss_difference,runtime_ratio
+0.0,cifar10__wrn28_2__11__clean,1,0.0,3.8817278601097067
+0.0,cifar10__wrn28_2__23__clean,1,0.0,3.941305920167919
+0.0,cifar10__wrn28_2__37__clean,1,0.0,4.065161885223842

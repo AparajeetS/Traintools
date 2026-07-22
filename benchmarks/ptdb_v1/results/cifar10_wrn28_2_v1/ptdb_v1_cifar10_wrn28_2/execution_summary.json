@@ -1,0 +1,10 @@
+{
+  "completed_executions": 12,
+  "error_rows": 0,
+  "instrumented_seconds_per_epoch_mean": 58.137832515653336,
+  "instrumented_seconds_per_epoch_max": 60.49305830764002,
+  "projected_81_run_core_gpu_hours": 32.702530790055,
+  "projection_is_timing_only": true,
+  "exact_hash_pairs": 3,
+  "paired_cells": 3
+}

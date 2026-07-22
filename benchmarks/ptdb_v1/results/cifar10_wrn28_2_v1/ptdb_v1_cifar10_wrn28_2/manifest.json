@@ -1,0 +1,113 @@
+{
+  "protocol": "PTDB-1",
+  "phase": "development_base",
+  "confirmatory": true,
+  "pilot_outputs_may_tune_thresholds": false,
+  "protocol_sha256": "5b01d1ca47b6ebca6601a9debc80b0edfb262c3ee6feeb8e0cc998b0ee92821e",
+  "protocol_repository_path": "benchmarks/ptdb_v1/PROTOCOL.md",
+  "config_sha256": "42fa4767e2dffb979ae4d3d66986cc7e5d2c279d3bc599e865ec54e8c71dca07",
+  "script_sha256": "6d2fa874ff4f444f564930245059a83397081706cf3aab4e41628daf71d9a0cb",
+  "started_at_unix": 1784706502.1502798,
+  "environment": {
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu128",
+    "torchvision": "0.25.0+cu128",
+    "traintools": "0.6.2",
+    "cuda": "12.8",
+    "gpu": "Tesla T4",
+    "cuda_preflight": {
+      "available": true,
+      "torch": "2.10.0+cu128",
+      "torch_cuda": "12.8",
+      "device": "Tesla T4",
+      "capability": [
+        7,
+        5
+      ]
+    },
+    "traintools_install": "pip --no-deps (preserve platform torch)"
+  },
+  "config": {
+    "protocol": "PTDB-1",
+    "phase": "development_base",
+    "shard": "cifar10_wrn28_2",
+    "public_package": "traintools==0.6.2",
+    "epochs": 25,
+    "batch_size": 128,
+    "num_workers": 2,
+    "amp": true,
+    "download": true,
+    "output_dir": "/kaggle/working/ptdb_v1_cifar10_wrn28_2",
+    "cells": [
+      {
+        "dataset": "cifar10",
+        "model": "wrn28_2",
+        "seed": 11,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "wrn28_2",
+        "seed": 11,
+        "regime": "symmetric"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "wrn28_2",
+        "seed": 11,
+        "regime": "class_conditional"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "wrn28_2",
+        "seed": 23,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "wrn28_2",
+        "seed": 23,
+        "regime": "symmetric"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "wrn28_2",
+        "seed": 23,
+        "regime": "class_conditional"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "wrn28_2",
+        "seed": 37,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "wrn28_2",
+        "seed": 37,
+        "regime": "symmetric"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "wrn28_2",
+        "seed": 37,
+        "regime": "class_conditional"
+      }
+    ]
+  },
+  "finished_at_unix": 1784720712.806619,
+  "outputs": {
+    "epoch_metrics.csv": "5dbcf6b9e0909b3f5d2c0add7a8128d88c5e45f507996d6116febb3a284dafcd",
+    "epoch_metrics.partial.csv": "5dbcf6b9e0909b3f5d2c0add7a8128d88c5e45f507996d6116febb3a284dafcd",
+    "errors.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "errors.partial.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "example_scores.csv.gz": "79a749de57c5277fda2f025c83de05fd10a4d6201a47b3c3f26333a9bdb25d9c",
+    "execution_summary.json": "0aec1439f7cc4a400163553ebea497cfb24e759e28e9b4f2a982aad5fcf0bfcd",
+    "frozen_protocol_pointer.json": "bcc22089bdcbcf534b8501189ddcf6f1b73aee293ce643d338b8ea97e8e4d2a7",
+    "manifest.started.json": "da366e00650240d8e9d565d3b75458c6cd9990e89af8518faca4da3b9d0de29a",
+    "paired_noninterference.csv": "fae405ec585cf067b397db5937ff914d44faf32172bfaa15d0854d49f564540e",
+    "run_summary.csv": "f66a566caac769151d66103ef3b8f7fa2add1e24b96bca35fe4c9e6cc7394dee",
+    "run_summary.partial.csv": "f66a566caac769151d66103ef3b8f7fa2add1e24b96bca35fe4c9e6cc7394dee"
+  }
+}

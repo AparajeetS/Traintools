@@ -1,0 +1,15 @@
+{
+  "script_sha256": "caa2e2a1339dc3fbbe32386658362ebd3cad00371e5ae86f4bd52e1451bc732f",
+  "inputs": {
+    "benchmarks\\ptdb_v1\\results\\cifar10_wrn28_2_v1\\ptdb_v1_cifar10_wrn28_2\\run_summary.csv": "f66a566caac769151d66103ef3b8f7fa2add1e24b96bca35fe4c9e6cc7394dee",
+    "benchmarks\\ptdb_v1\\results\\cifar10_wrn28_2_v1\\ptdb_v1_cifar10_wrn28_2\\epoch_metrics.csv": "5dbcf6b9e0909b3f5d2c0add7a8128d88c5e45f507996d6116febb3a284dafcd",
+    "benchmarks\\ptdb_v1\\results\\cifar10_wrn28_2_v1\\ptdb_v1_cifar10_wrn28_2\\paired_noninterference.csv": "fae405ec585cf067b397db5937ff914d44faf32172bfaa15d0854d49f564540e",
+    "benchmarks\\ptdb_v1\\results\\cifar10_wrn28_2_v1\\ptdb_v1_cifar10_wrn28_2\\errors.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "benchmarks\\ptdb_v1\\results\\cifar10_wrn28_2_v1\\ptdb_v1_cifar10_wrn28_2\\manifest.json": "62f9fa63981d24d7efa773083d3d13a2288b279787769d7b330c53d615ee325f"
+  },
+  "outputs": {
+    "base_summary.json": "3919f8b81e2cb73cefd8a087fec4c7027cea8c97a281ffdc38c81a7461645d9f",
+    "label_noise_by_run.csv": "ff560fbc0cec43be66219f4a25486fa2c4d3224070bc22498736f747621b8008",
+    "trainguard_decision_targets.csv": "5d641bdb8ba928ae62b1eb373d793e8bd6b9529cebb94037c3843893a63ae0cd"
+  }
+}
