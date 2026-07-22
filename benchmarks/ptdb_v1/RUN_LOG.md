@@ -22,6 +22,17 @@
 - Downloaded evidence: `results/cifar10_resnet18_v1/`.
 - Frozen analysis: `results/analysis_cifar10_resnet18_v1/`.
 
+## CIFAR-10 WRN-28-2 shard
+
+- Submitted: 2026-07-22 13:17:22 +05:30
+- Kaggle kernel: `aparajeetshadangi/phason-ptdb-1-cifar-10-wrn28-2-development`
+- Kernel version: 1
+- Source commit: `8b7ce210b4eb5a288da5042c84d910cdb143371c`
+- Requested accelerator: `NvidiaTeslaT4`
+- Submission matrix: nine instrumented runs and three clean plain twins
+- Epochs: 25 per execution
+- Status after setup window: running
+
 The Kaggle-created slug inserted a hyphen in `cifar-10`; the local metadata ID
 was corrected after version 1 started. This pointer correction changes no code,
 configuration, dataset, model, seed, regime, threshold, or success gate.
