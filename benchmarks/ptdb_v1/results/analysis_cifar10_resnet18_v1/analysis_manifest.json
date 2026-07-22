@@ -1,0 +1,15 @@
+{
+  "script_sha256": "caa2e2a1339dc3fbbe32386658362ebd3cad00371e5ae86f4bd52e1451bc732f",
+  "inputs": {
+    "benchmarks\\ptdb_v1\\results\\cifar10_resnet18_v1\\ptdb_v1_cifar10_resnet18\\run_summary.csv": "9215c541142e5533a5e1b3a9c1a9483af2fbf6a6d5f45df7a6eae7903bed9318",
+    "benchmarks\\ptdb_v1\\results\\cifar10_resnet18_v1\\ptdb_v1_cifar10_resnet18\\epoch_metrics.csv": "859ca0dbbc4d8fd5d3b85d12afe77001600466d3bc3b1d2803c804ce5488b503",
+    "benchmarks\\ptdb_v1\\results\\cifar10_resnet18_v1\\ptdb_v1_cifar10_resnet18\\paired_noninterference.csv": "d34cf83566fc6e386b30cd0635ac797ce3729b92d78e25d309a99cc414b41e31",
+    "benchmarks\\ptdb_v1\\results\\cifar10_resnet18_v1\\ptdb_v1_cifar10_resnet18\\errors.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "benchmarks\\ptdb_v1\\results\\cifar10_resnet18_v1\\ptdb_v1_cifar10_resnet18\\manifest.json": "2995935abf1406bdfaf7d2af99a8650b141712fb29dbab762210178ad1e5e580"
+  },
+  "outputs": {
+    "base_summary.json": "6f547b4b284593e6f58d48727cbf091b1bd4e1200dabaadd803538f89a9fd7cb",
+    "label_noise_by_run.csv": "6748d274a2347b1a8beaf81f6ae9045d7e92f85f5c3362b582c9e549c40a1a6c",
+    "trainguard_decision_targets.csv": "fa3892536240432f88c05711eafb10b838cb1b4982d9271ca0c6b0f496112dce"
+  }
+}

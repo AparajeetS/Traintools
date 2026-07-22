@@ -1,0 +1,90 @@
+[{"stream_name":"stdout","time":3.761891381,"data":"   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 55.0/55.0 kB 1.9 MB/s eta 0:00:00\n"}
+,{"stream_name":"stdout","time":16.781534555,"data":"\n"}
+,{"stream_name":"stdout","time":16.781570418,"data":"=== PTDB-1 cifar10__resnet18__s11__clean__plain ===\n"}
+,{"stream_name":"stdout","time":519.007277337,"data":"\n"}
+,{"stream_name":"stdout","time":519.007324084,"data":"=== PTDB-1 cifar10__resnet18__s11__clean__instrumented ===\n"}
+,{"stream_name":"stderr","time":608.497322775,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:82: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":608.497390467,"data":"  popt, pcov = curve_fit(_power_law_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":608.511941743,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:86: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":608.511961643,"data":"  popt, pcov = curve_fit(_exp_decay_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":608.512074402,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar multiply\n"}
+,{"stream_name":"stderr","time":608.512096262,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stderr","time":608.512211006,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar add\n"}
+,{"stream_name":"stderr","time":608.512219597,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stdout","time":2016.988197685,"data":"\n"}
+,{"stream_name":"stdout","time":2016.988245682,"data":"=== PTDB-1 cifar10__resnet18__s11__symmetric__instrumented ===\n"}
+,{"stream_name":"stdout","time":3565.124973096,"data":"\n"}
+,{"stream_name":"stdout","time":3565.125016512,"data":"=== PTDB-1 cifar10__resnet18__s11__class_conditional__instrumented ===\n"}
+,{"stream_name":"stderr","time":3662.111986182,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:82: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":3662.112048893,"data":"  popt, pcov = curve_fit(_power_law_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":3662.131937476,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:86: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":3662.131974361,"data":"  popt, pcov = curve_fit(_exp_decay_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":3732.302026426,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar add\n"}
+,{"stream_name":"stderr","time":3732.302080191,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stderr","time":3732.302085874,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar multiply\n"}
+,{"stream_name":"stderr","time":3732.302089925,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stdout","time":5373.563526178,"data":"\n"}
+,{"stream_name":"stdout","time":5373.563591366,"data":"=== PTDB-1 cifar10__resnet18__s23__clean__plain ===\n"}
+,{"stream_name":"stdout","time":5878.271401785,"data":"\n"}
+,{"stream_name":"stdout","time":5878.271457117,"data":"=== PTDB-1 cifar10__resnet18__s23__clean__instrumented ===\n"}
+,{"stream_name":"stderr","time":5983.968406216,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:82: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":5983.968477661,"data":"  popt, pcov = curve_fit(_power_law_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":5983.988277137,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:86: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":5983.988315922,"data":"  popt, pcov = curve_fit(_exp_decay_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":5983.98832258,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar multiply\n"}
+,{"stream_name":"stderr","time":5983.988327422,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stderr","time":5983.988345788,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar add\n"}
+,{"stream_name":"stderr","time":5983.98835175,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stdout","time":7602.110622209,"data":"\n"}
+,{"stream_name":"stdout","time":7602.110673492,"data":"=== PTDB-1 cifar10__resnet18__s23__symmetric__instrumented ===\n"}
+,{"stream_name":"stdout","time":9075.30357325,"data":"\n"}
+,{"stream_name":"stdout","time":9075.303617047,"data":"=== PTDB-1 cifar10__resnet18__s23__class_conditional__instrumented ===\n"}
+,{"stream_name":"stderr","time":9161.619682465,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:82: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":9161.619738652,"data":"  popt, pcov = curve_fit(_power_law_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":9161.630695136,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:86: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":9161.630714646,"data":"  popt, pcov = curve_fit(_exp_decay_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":9161.630722266,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar multiply\n"}
+,{"stream_name":"stderr","time":9161.630727947,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stderr","time":9161.63077966,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar add\n"}
+,{"stream_name":"stderr","time":9161.630802187,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stdout","time":10597.101727558,"data":"\n"}
+,{"stream_name":"stdout","time":10597.101765995,"data":"=== PTDB-1 cifar10__resnet18__s37__clean__plain ===\n"}
+,{"stream_name":"stdout","time":11098.817809345,"data":"\n"}
+,{"stream_name":"stdout","time":11098.817854124,"data":"=== PTDB-1 cifar10__resnet18__s37__clean__instrumented ===\n"}
+,{"stream_name":"stderr","time":11184.491360115,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:82: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":11184.491399772,"data":"  popt, pcov = curve_fit(_power_law_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":11184.506779253,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:86: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":11184.506799476,"data":"  popt, pcov = curve_fit(_exp_decay_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":11184.506972088,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar multiply\n"}
+,{"stream_name":"stderr","time":11184.506981339,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stderr","time":11184.507047751,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar add\n"}
+,{"stream_name":"stderr","time":11184.507065911,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stdout","time":12559.933799729,"data":"\n"}
+,{"stream_name":"stdout","time":12559.933865632,"data":"=== PTDB-1 cifar10__resnet18__s37__symmetric__instrumented ===\n"}
+,{"stream_name":"stdout","time":14024.853050559,"data":"\n"}
+,{"stream_name":"stdout","time":14024.853094003,"data":"=== PTDB-1 cifar10__resnet18__s37__class_conditional__instrumented ===\n"}
+,{"stream_name":"stderr","time":14110.235415244,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:82: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":14110.235454459,"data":"  popt, pcov = curve_fit(_power_law_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":14110.250634974,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:86: OptimizeWarning: Covariance of the parameters could not be estimated\n"}
+,{"stream_name":"stderr","time":14110.250673799,"data":"  popt, pcov = curve_fit(_exp_decay_np, t, y, p0=p0, bounds=bounds, maxfev=5000)\n"}
+,{"stream_name":"stderr","time":14167.937205979,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar add\n"}
+,{"stream_name":"stderr","time":14167.937243032,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stderr","time":14167.937247216,"data":"/usr/local/lib/python3.12/dist-packages/traintools/earlyguard.py:103: RuntimeWarning: invalid value encountered in scalar multiply\n"}
+,{"stream_name":"stderr","time":14167.93725187,"data":"  return a + b * np.exp(-c * t)\n"}
+,{"stream_name":"stdout","time":15533.757211138,"data":"{\n"}
+,{"stream_name":"stdout","time":15533.757263525,"data":"  \"completed_executions\": 12,\n"}
+,{"stream_name":"stdout","time":15533.757270804,"data":"  \"error_rows\": 0,\n"}
+,{"stream_name":"stdout","time":15533.757276214,"data":"  \"instrumented_seconds_per_epoch_mean\": 62.06206606681334,\n"}
+,{"stream_name":"stdout","time":15533.757281648,"data":"  \"instrumented_seconds_per_epoch_max\": 72.16460630768,\n"}
+,{"stream_name":"stdout","time":15533.757286418,"data":"  \"projected_81_run_core_gpu_hours\": 34.9099121625825,\n"}
+,{"stream_name":"stdout","time":15533.757291011,"data":"  \"projection_is_timing_only\": true,\n"}
+,{"stream_name":"stdout","time":15533.757295421,"data":"  \"exact_hash_pairs\": 3,\n"}
+,{"stream_name":"stdout","time":15533.757299909,"data":"  \"paired_cells\": 3\n"}
+,{"stream_name":"stdout","time":15533.757304473,"data":"}\n"}
+,{"stream_name":"stderr","time":15538.43730428,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":15538.4373379,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":15538.672064891,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":15538.672093494,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":15539.285571954,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":15540.632071197,"data":"[NbConvertApp] Writing 457516 bytes to __results__.html\n"}
+]

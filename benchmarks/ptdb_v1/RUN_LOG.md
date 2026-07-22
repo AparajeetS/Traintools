@@ -11,6 +11,17 @@
 - Submission matrix: 27 instrumented runs and six plain twins, 25 epochs each
 - Status after setup window: running
 
+### Completion status, checked 2026-07-22 13:12 +05:30
+
+- Kaggle status: `COMPLETE`.
+- Frozen validator: passed every check.
+- Completed executions: 12 of 12 with zero error rows.
+- Epoch rows: 300 of 300.
+- Exact plain/instrumented hashes: three of three.
+- Maximum paired accuracy difference: 0.0.
+- Downloaded evidence: `results/cifar10_resnet18_v1/`.
+- Frozen analysis: `results/analysis_cifar10_resnet18_v1/`.
+
 The Kaggle-created slug inserted a hyphen in `cifar-10`; the local metadata ID
 was corrected after version 1 started. This pointer correction changes no code,
 configuration, dataset, model, seed, regime, threshold, or success gate.

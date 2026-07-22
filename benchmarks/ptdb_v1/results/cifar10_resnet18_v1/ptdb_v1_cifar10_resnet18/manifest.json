@@ -1,0 +1,113 @@
+{
+  "protocol": "PTDB-1",
+  "phase": "development_base",
+  "confirmatory": true,
+  "pilot_outputs_may_tune_thresholds": false,
+  "protocol_sha256": "5b01d1ca47b6ebca6601a9debc80b0edfb262c3ee6feeb8e0cc998b0ee92821e",
+  "protocol_repository_path": "benchmarks/ptdb_v1/PROTOCOL.md",
+  "config_sha256": "42c23635b9c2150e3f95bdb4cbbcb3d3f84b8eb7812720ecfc2edad950ac179c",
+  "script_sha256": "1da60d48e2c0946ea665ba5a4d946598fa525be589c62eb2253ce2133b95a8d1",
+  "started_at_unix": 1784661037.030711,
+  "environment": {
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu128",
+    "torchvision": "0.25.0+cu128",
+    "traintools": "0.6.2",
+    "cuda": "12.8",
+    "gpu": "Tesla T4",
+    "cuda_preflight": {
+      "available": true,
+      "torch": "2.10.0+cu128",
+      "torch_cuda": "12.8",
+      "device": "Tesla T4",
+      "capability": [
+        7,
+        5
+      ]
+    },
+    "traintools_install": "pip --no-deps (preserve platform torch)"
+  },
+  "config": {
+    "protocol": "PTDB-1",
+    "phase": "development_base",
+    "shard": "cifar10_resnet18",
+    "public_package": "traintools==0.6.2",
+    "epochs": 25,
+    "batch_size": 128,
+    "num_workers": 2,
+    "amp": true,
+    "download": true,
+    "output_dir": "/kaggle/working/ptdb_v1_cifar10_resnet18",
+    "cells": [
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 11,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 11,
+        "regime": "symmetric"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 11,
+        "regime": "class_conditional"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 23,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 23,
+        "regime": "symmetric"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 23,
+        "regime": "class_conditional"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 37,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 37,
+        "regime": "symmetric"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 37,
+        "regime": "class_conditional"
+      }
+    ]
+  },
+  "finished_at_unix": 1784676553.9551618,
+  "outputs": {
+    "epoch_metrics.csv": "859ca0dbbc4d8fd5d3b85d12afe77001600466d3bc3b1d2803c804ce5488b503",
+    "epoch_metrics.partial.csv": "859ca0dbbc4d8fd5d3b85d12afe77001600466d3bc3b1d2803c804ce5488b503",
+    "errors.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "errors.partial.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "example_scores.csv.gz": "171d4f0bfbc1aec90f43216a82e605a90530bf15b219f3f13a9205ac8f2973a8",
+    "execution_summary.json": "56cb68138b2363270fb5c722ed03b7d9cc0fa18e2c2c1653d1d453e31b643ce7",
+    "frozen_protocol_pointer.json": "bcc22089bdcbcf534b8501189ddcf6f1b73aee293ce643d338b8ea97e8e4d2a7",
+    "manifest.started.json": "86692bcdf1f9fc372c40d2448d7b5275a1de77392895c05bb21d9ef1edffd6b8",
+    "paired_noninterference.csv": "d34cf83566fc6e386b30cd0635ac797ce3729b92d78e25d309a99cc414b41e31",
+    "run_summary.csv": "9215c541142e5533a5e1b3a9c1a9483af2fbf6a6d5f45df7a6eae7903bed9318",
+    "run_summary.partial.csv": "9215c541142e5533a5e1b3a9c1a9483af2fbf6a6d5f45df7a6eae7903bed9318"
+  }
+}

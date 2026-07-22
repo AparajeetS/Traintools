@@ -1,0 +1,99 @@
+{
+  "protocol": "PTDB-1",
+  "phase": "development_base",
+  "confirmatory": true,
+  "pilot_outputs_may_tune_thresholds": false,
+  "protocol_sha256": "5b01d1ca47b6ebca6601a9debc80b0edfb262c3ee6feeb8e0cc998b0ee92821e",
+  "protocol_repository_path": "benchmarks/ptdb_v1/PROTOCOL.md",
+  "config_sha256": "42c23635b9c2150e3f95bdb4cbbcb3d3f84b8eb7812720ecfc2edad950ac179c",
+  "script_sha256": "1da60d48e2c0946ea665ba5a4d946598fa525be589c62eb2253ce2133b95a8d1",
+  "started_at_unix": 1784661037.030711,
+  "environment": {
+    "python": "3.12.13 (main, Mar  4 2026, 09:23:07) [GCC 11.4.0]",
+    "platform": "Linux-6.12.90+-x86_64-with-glibc2.35",
+    "torch": "2.10.0+cu128",
+    "torchvision": "0.25.0+cu128",
+    "traintools": "0.6.2",
+    "cuda": "12.8",
+    "gpu": "Tesla T4",
+    "cuda_preflight": {
+      "available": true,
+      "torch": "2.10.0+cu128",
+      "torch_cuda": "12.8",
+      "device": "Tesla T4",
+      "capability": [
+        7,
+        5
+      ]
+    },
+    "traintools_install": "pip --no-deps (preserve platform torch)"
+  },
+  "config": {
+    "protocol": "PTDB-1",
+    "phase": "development_base",
+    "shard": "cifar10_resnet18",
+    "public_package": "traintools==0.6.2",
+    "epochs": 25,
+    "batch_size": 128,
+    "num_workers": 2,
+    "amp": true,
+    "download": true,
+    "output_dir": "/kaggle/working/ptdb_v1_cifar10_resnet18",
+    "cells": [
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 11,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 11,
+        "regime": "symmetric"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 11,
+        "regime": "class_conditional"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 23,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 23,
+        "regime": "symmetric"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 23,
+        "regime": "class_conditional"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 37,
+        "regime": "clean"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 37,
+        "regime": "symmetric"
+      },
+      {
+        "dataset": "cifar10",
+        "model": "resnet18",
+        "seed": 37,
+        "regime": "class_conditional"
+      }
+    ]
+  }
+}

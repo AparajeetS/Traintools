@@ -1,0 +1,171 @@
+{
+  "analysis": "PTDB-1 base matrix",
+  "bootstrap_seed": 20260718,
+  "bootstrap_repetitions": 10000,
+  "completed_executions": 12,
+  "label_noise": {
+    "cifar10": {
+      "aum_auroc": {
+        "mean": 0.9885086666666667,
+        "ci95": [
+          0.9831243189300412,
+          0.9938930144032921
+        ],
+        "clusters": 2
+      },
+      "aum_average_precision": {
+        "mean": 0.928461574641394,
+        "ci95": [
+          0.8767352027297166,
+          0.9801879465530714
+        ],
+        "clusters": 2
+      },
+      "aum_precision_at_noise": {
+        "mean": 0.9142592592592592,
+        "ci95": [
+          0.9009999999999999,
+          0.9275185185185185
+        ],
+        "clusters": 2
+      },
+      "el2n_auroc": {
+        "mean": 0.9931612741769547,
+        "ci95": [
+          0.9925807479423868,
+          0.9937418004115225
+        ],
+        "clusters": 2
+      },
+      "el2n_average_precision": {
+        "mean": 0.973097180031483,
+        "ci95": [
+          0.96703595808496,
+          0.9791584019780061
+        ],
+        "clusters": 2
+      },
+      "el2n_precision_at_noise": {
+        "mean": 0.9274444444444445,
+        "ci95": [
+          0.9260740740740742,
+          0.9288148148148148
+        ],
+        "clusters": 2
+      },
+      "forgetting_auroc": {
+        "mean": 0.33607225308641975,
+        "ci95": [
+          0.31422723405349795,
+          0.3579172721193416
+        ],
+        "clusters": 2
+      },
+      "forgetting_average_precision": {
+        "mean": 0.1728185467785718,
+        "ci95": [
+          0.17236311093787862,
+          0.173273982619265
+        ],
+        "clusters": 2
+      },
+      "forgetting_precision_at_noise": {
+        "mean": 0.08962962962962964,
+        "ci95": [
+          0.08011111111111112,
+          0.09914814814814815
+        ],
+        "clusters": 2
+      },
+      "mean_confidence_auroc": {
+        "mean": 0.9895060056584362,
+        "ci95": [
+          0.9854518148148147,
+          0.9935601965020576
+        ],
+        "clusters": 2
+      },
+      "mean_confidence_average_precision": {
+        "mean": 0.9386465573036366,
+        "ci95": [
+          0.8983374377244081,
+          0.978955676882865
+        ],
+        "clusters": 2
+      },
+      "mean_confidence_precision_at_noise": {
+        "mean": 0.916574074074074,
+        "ci95": [
+          0.9067777777777778,
+          0.9263703703703703
+        ],
+        "clusters": 2
+      },
+      "mean_loss_auroc": {
+        "mean": 0.9791628752572017,
+        "ci95": [
+          0.9652675498971194,
+          0.993058200617284
+        ],
+        "clusters": 2
+      },
+      "mean_loss_average_precision": {
+        "mean": 0.8727260655176039,
+        "ci95": [
+          0.7673420370327658,
+          0.9781100940024419
+        ],
+        "clusters": 2
+      },
+      "mean_loss_precision_at_noise": {
+        "mean": 0.8748518518518518,
+        "ci95": [
+          0.8248888888888888,
+          0.9248148148148149
+        ],
+        "clusters": 2
+      },
+      "random_auroc": {
+        "mean": 0.4986346095679012,
+        "ci95": [
+          0.49760749485596706,
+          0.49966172427983535
+        ],
+        "clusters": 2
+      },
+      "random_average_precision": {
+        "mean": 0.19956243987091338,
+        "ci95": [
+          0.19904558616678336,
+          0.20007929357504337
+        ],
+        "clusters": 2
+      },
+      "random_precision_at_noise": {
+        "mean": 0.1973888888888889,
+        "ci95": [
+          0.19666666666666666,
+          0.19811111111111113
+        ],
+        "clusters": 2
+      },
+      "aum_minus_mean_loss_auroc": {
+        "mean": 0.009345791409464973,
+        "ci95": [
+          0.0008348137860081373,
+          0.01785676903292181
+        ],
+        "clusters": 2
+      }
+    }
+  },
+  "noninterference": {
+    "pairs": 3,
+    "exact_hash_rate": 1.0,
+    "max_abs_accuracy_difference": 0.0,
+    "max_abs_loss_difference": 0.0,
+    "runtime_ratio_median": 3.007178541278384,
+    "runtime_ratio_p90": 3.3398574127454395
+  },
+  "protected_holdout_used": false
+}

@@ -1,0 +1,24 @@
+{
+  "valid_base_shard": true,
+  "dataset": "cifar10",
+  "model": "resnet18",
+  "checks": {
+    "no_error_rows": true,
+    "expected_completed_executions": true,
+    "expected_instrumented_runs": true,
+    "expected_plain_twins": true,
+    "expected_completed_pairs": true,
+    "all_pairs_exact": true,
+    "all_runs_are_declared_dataset": true,
+    "all_runs_are_declared_model": true,
+    "all_runs_have_25_epochs": true,
+    "all_epoch_rows_present": true,
+    "public_package_is_0_6_2": true,
+    "t4_recorded": true,
+    "output_hashes_match": true
+  },
+  "completed_executions": 12,
+  "exact_hash_pairs": 3,
+  "max_abs_accuracy_difference": 0.0,
+  "interpretation_boundary": "Base development evidence only; protected holdout remains sealed."
+}
